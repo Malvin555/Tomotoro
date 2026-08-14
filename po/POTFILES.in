@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/org.maldoro.fyvin.desktop.in
+data/org.maldoro.fyvin.metainfo.xml.in
+data/org.maldoro.fyvin.gschema.xml
+src/main.py
+src/window.py
+src/window.ui

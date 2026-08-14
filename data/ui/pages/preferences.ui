@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="MaldoroPreferences" parent="AdwPreferencesDialog">
+    <property name="title" translatable="yes">Preferences</property>
+
+    <child>
+      <object class="AdwPreferencesPage">
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Timer</property>
+
+            <child>
+              <object class="AdwSpinRow" id="focus_length_row">
+                <property name="title" translatable="yes">Focus Length</property>
+                <property name="subtitle" translatable="yes">Minutes per focus session</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1</property>
+                    <property name="upper">120</property>
+                    <property name="value">25</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSpinRow" id="short_break_row">
+                <property name="title" translatable="yes">Short Break</property>
+                <property name="subtitle" translatable="yes">Minutes per short break</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1</property>
+                    <property name="upper">60</property>
+                    <property name="value">5</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSpinRow" id="long_break_row">
+                <property name="title" translatable="yes">Long Break</property>
+                <property name="subtitle" translatable="yes">Minutes per long break</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1</property>
+                    <property name="upper">90</property>
+                    <property name="value">15</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSpinRow" id="sessions_row">
+                <property name="title" translatable="yes">Sessions Before Long Break</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1</property>
+                    <property name="upper">12</property>
+                    <property name="value">4</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Behavior</property>
+
+            <child>
+              <object class="AdwSwitchRow" id="auto_start_breaks_row">
+                <property name="title" translatable="yes">Auto-start Breaks</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSwitchRow" id="auto_start_focus_row">
+                <property name="title" translatable="yes">Auto-start Focus Sessions</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSwitchRow" id="sound_row">
+                <property name="title" translatable="yes">Play Sound on Completion</property>
+                <property name="active">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

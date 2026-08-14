@@ -1,0 +1,160 @@
+/* MalDoro Style Sheet - GTK4 / Libadwaita */
+
+/* Mode Switcher */
+.mode-switcher {
+  border-radius: 9999px;
+  padding: 3px;
+  background-color: alpha(currentColor, 0.05);
+}
+
+.mode-switcher button {
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  transition: all 180ms ease;
+}
+
+.mode-switcher button:checked {
+  background-color: @card_bg_color;
+  color: @card_fg_color;
+}
+
+/* Status Chip */
+.status-chip {
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: alpha(currentColor, 0.06);
+  color: alpha(currentColor, 0.7);
+}
+
+/* Hero Timer Card */
+.timer-hero-card {
+  border-radius: 20px;
+  background-color: alpha(currentColor, 0.035);
+  border: 1px solid alpha(currentColor, 0.07);
+  padding: 24px 18px 18px 18px;
+  transition: all 200ms ease;
+}
+
+.timer-hero-card:hover {
+  background-color: alpha(currentColor, 0.045);
+  border-color: alpha(currentColor, 0.1);
+}
+
+/* Large Tabular Timer Typography */
+.timer-display {
+  font-size: 58px;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: @card_fg_color;
+}
+
+.timer-phase-caption {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: alpha(currentColor, 0.5);
+  margin-top: -4px;
+}
+
+/* Sleek Modern Progress Bar */
+.timer-progress {
+  min-height: 7px;
+  margin-top: 10px;
+}
+
+.timer-progress trough {
+  min-height: 7px;
+  border-radius: 9999px;
+  background-color: alpha(currentColor, 0.08);
+  border: none;
+}
+
+.timer-progress progress {
+  min-height: 7px;
+  border-radius: 9999px;
+  background-color: @accent_bg_color;
+  border: none;
+  transition: all 200ms ease;
+}
+
+/* Action Controls */
+.start-button {
+  min-width: 120px;
+  min-height: 42px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 180ms ease;
+}
+
+.start-button:hover {
+  box-shadow: 0 3px 10px alpha(@accent_bg_color, 0.4);
+}
+
+.secondary-action-btn {
+  min-width: 80px;
+  min-height: 40px;
+  border-radius: 9999px;
+  background-color: alpha(currentColor, 0.06);
+  border: 1px solid alpha(currentColor, 0.08);
+  transition: all 180ms ease;
+}
+
+.secondary-action-btn:hover {
+  background-color: alpha(currentColor, 0.12);
+  border-color: alpha(currentColor, 0.14);
+}
+
+.secondary-action-btn:active {
+  background-color: alpha(currentColor, 0.18);
+}
+
+/* Ambient Audio Section */
+.ambient-card {
+  border-radius: 16px;
+  background-color: alpha(currentColor, 0.035);
+  border: 1px solid alpha(currentColor, 0.07);
+  padding: 14px 16px;
+}
+
+.ambient-card .heading {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Stat Cards */
+.stat-box {
+  border-radius: 16px;
+  background-color: alpha(currentColor, 0.035);
+  border: 1px solid alpha(currentColor, 0.07);
+  padding: 12px 14px;
+  transition: background-color 180ms ease;
+}
+
+.stat-box:hover {
+  background-color: alpha(currentColor, 0.05);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: alpha(currentColor, 0.6);
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: @card_fg_color;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
