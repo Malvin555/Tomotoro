@@ -8,7 +8,7 @@
     <property name="default-width">400</property>
     <property name="default-height">640</property>
     <property name="width-request">320</property>
-    <property name="height-request">480</property>
+    <property name="height-request">615</property>
 
     <property name="content">
       <object class="AdwToolbarView">

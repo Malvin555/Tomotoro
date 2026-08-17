@@ -36,14 +36,14 @@
 /* Hero Timer Card */
 .timer-hero-card {
   border-radius: 20px;
-  background-color: alpha(currentColor, 0.035);
-  border: 1px solid alpha(currentColor, 0.07);
+  background-color: alpha(currentColor, 0.05);
   padding: 24px 18px 18px 18px;
   transition: all 200ms ease;
+  box-shadow: none;
 }
 
 .timer-hero-card:hover {
-  background-color: alpha(currentColor, 0.045);
+  background-color: alpha(currentColor, 0.08);
   border-color: alpha(currentColor, 0.1);
 }
 
@@ -75,7 +75,7 @@
 .timer-progress trough {
   min-height: 7px;
   border-radius: 9999px;
-  background-color: alpha(currentColor, 0.08);
+  background-color: alpha(currentColor, 0.09);
   border: none;
 }
 
@@ -105,8 +105,7 @@
   min-width: 80px;
   min-height: 40px;
   border-radius: 9999px;
-  background-color: alpha(currentColor, 0.06);
-  border: 1px solid alpha(currentColor, 0.08);
+  background-color: alpha(currentColor, 0.05);
   transition: all 180ms ease;
 }
 
@@ -122,8 +121,8 @@
 /* Ambient Audio Section */
 .ambient-card {
   border-radius: 16px;
-  background-color: alpha(currentColor, 0.035);
-  border: 1px solid alpha(currentColor, 0.07);
+  background-color: alpha(currentColor, 0.05);
+  box-shadow: none;
   padding: 14px 16px;
 }
 
@@ -135,14 +134,14 @@
 /* Stat Cards */
 .stat-box {
   border-radius: 16px;
-  background-color: alpha(currentColor, 0.035);
-  border: 1px solid alpha(currentColor, 0.07);
+  background-color: alpha(currentColor, 0.05);
+  box-shadow: none;
   padding: 12px 14px;
   transition: background-color 180ms ease;
 }
 
 .stat-box:hover {
-  background-color: alpha(currentColor, 0.05);
+  background-color: alpha(currentColor, 0.08);
 }
 
 .stat-label {
