@@ -1,16 +1,21 @@
-# Pomodoro view controller
-from gi.repository import Gtk, Adw, Gdk, Gio
+from gi.repository import Adw, Gdk, Gio, Gtk, Pango
 
-from ..services.timer import TimerService, MODE_FOCUS, MODE_SHORT, MODE_LONG, MODE_TITLES
+from ..constant import MODE_TITLES
+from ..services.analytics import AnalyticsService
 from ..services.audio import AudioService
 from ..services.settings import SettingsService
-from ..utils.formatters import format_time, format_focus_time, format_sessions
+from ..services.timer import (
+    MODE_FOCUS,
+    MODE_LONG,
+    MODE_SHORT,
+    TimerService,
+)
+from ..utils.formatters import format_focus_time, format_sessions, format_time
+from ..utils.marquee import MarqueeLabel
 
 
 @Gtk.Template(resource_path="/org/maldoro/fyvin/pomodoro.ui")
 class PomodoroView(Gtk.Box):
-    """View controller for the Pomodoro page."""
-
     __gtype_name__ = "PomodoroView"
 
     toast_overlay = Gtk.Template.Child()
@@ -25,6 +30,8 @@ class PomodoroView(Gtk.Box):
     skip_button = Gtk.Template.Child()
     music_switch = Gtk.Template.Child()
     music_controls_box = Gtk.Template.Child()
+    title_scroll = Gtk.Template.Child()
+    title_label = Gtk.Template.Child()
     track_dropdown = Gtk.Template.Child()
     music_file_button = Gtk.Template.Child()
     music_play_button = Gtk.Template.Child()
@@ -37,26 +44,44 @@ class PomodoroView(Gtk.Box):
 
         self.timer_service = TimerService()
         self.audio_service = AudioService()
+        self.analytics_service = AnalyticsService.get_default()
+        self.timer_service.on_complete_callbacks.append(
+            self.analytics_service.record_session
+        )
+        self.audio_service.on_state_change_callbacks.append(
+            self.analytics_service.record_audio_state
+        )
         self.settings_service = SettingsService.get_default()
+        self.title_marquee = MarqueeLabel(self.title_scroll, self.title_label)
 
         self._setup_signals()
         self._setup_audio_tracks()
         self._sync_view()
 
-    # Setup & initialization 
+    # Setup & initialization
     def _setup_signals(self):
         # Timer service callbacks
         self.timer_service.on_tick_callbacks.append(self._on_timer_tick)
         self.timer_service.on_complete_callbacks.append(self._on_timer_complete)
-        self.timer_service.on_state_change_callbacks.append(self._on_timer_state_changed)
+        self.timer_service.on_state_change_callbacks.append(
+            self._on_timer_state_changed
+        )
 
         # Audio service callbacks
-        self.audio_service.on_state_change_callbacks.append(self._on_audio_state_changed)
+        self.audio_service.on_state_change_callbacks.append(
+            self._on_audio_state_changed
+        )
 
         # UI actions
-        self.mode_focus_toggle.connect("toggled", self._on_mode_button_toggled, MODE_FOCUS)
-        self.mode_short_toggle.connect("toggled", self._on_mode_button_toggled, MODE_SHORT)
-        self.mode_long_toggle.connect("toggled", self._on_mode_button_toggled, MODE_LONG)
+        self.mode_focus_toggle.connect(
+            "toggled", self._on_mode_button_toggled, MODE_FOCUS
+        )
+        self.mode_short_toggle.connect(
+            "toggled", self._on_mode_button_toggled, MODE_SHORT
+        )
+        self.mode_long_toggle.connect(
+            "toggled", self._on_mode_button_toggled, MODE_LONG
+        )
 
         self.start_button.connect("clicked", lambda *_: self.timer_service.toggle())
         self.reset_button.connect("clicked", lambda *_: self.timer_service.reset())
@@ -65,12 +90,33 @@ class PomodoroView(Gtk.Box):
         self.music_switch.connect("notify::active", self._on_music_switch_toggled)
         self.track_dropdown.connect("notify::selected", self._on_track_selected)
         self.music_file_button.connect("clicked", self._on_choose_audio_file)
-        self.music_play_button.connect("clicked", lambda *_: self.audio_service.toggle())
+        self.music_play_button.connect(
+            "clicked", lambda *_: self.audio_service.toggle()
+        )
         self.volume_scale.connect("value-changed", self._on_volume_changed)
 
     def _setup_audio_tracks(self):
+        if self.track_dropdown.get_factory() is None:
+            self.track_dropdown.set_factory(self._build_track_factory())
         tracks = self.audio_service.get_track_list()
         self.track_dropdown.set_model(Gtk.StringList.new(tracks))
+
+    def _build_track_factory(self):
+        factory = Gtk.SignalListItemFactory()
+        factory.connect("setup", self._on_track_factory_setup)
+        factory.connect("bind", self._on_track_factory_bind)
+        return factory
+
+    def _on_track_factory_setup(self, factory, list_item):
+        label = Gtk.Label(xalign=0)
+        label.set_hexpand(True)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        label.set_max_width_chars(16)
+        list_item.set_child(label)
+
+    def _on_track_factory_bind(self, factory, list_item):
+        label = list_item.get_child()
+        label.set_label(list_item.get_item().get_string())
 
     def _sync_view(self):
         self.timer_label.set_label(format_time(self.timer_service.seconds_left))
@@ -89,7 +135,9 @@ class PomodoroView(Gtk.Box):
         if self.timer_service.mode == MODE_FOCUS:
             self._update_stats_display()
 
-    def _on_timer_state_changed(self, mode, running, seconds_left, total_seconds, fraction):
+    def _on_timer_state_changed(
+        self, mode, running, seconds_left, total_seconds, fraction
+    ):
         self.timer_label.set_label(format_time(seconds_left))
         self.progress_bar.set_fraction(fraction)
         self.start_button.set_label("Pause" if running else "Start")
@@ -107,7 +155,7 @@ class PomodoroView(Gtk.Box):
         self.toast_overlay.add_toast(toast)
         self._update_stats_display()
 
-    # Audio controls & file chooser 
+    # Audio controls & file chooser
     def _on_music_switch_toggled(self, switch, _pspec):
         active = switch.get_active()
         self.music_controls_box.set_sensitive(active)
@@ -131,7 +179,11 @@ class PomodoroView(Gtk.Box):
             dialog.set_default_filter(audio_filter)
 
             window = self.get_root()
-            dialog.open(window if isinstance(window, Gtk.Window) else None, None, self._on_file_dialog_finish)
+            dialog.open(
+                window if isinstance(window, Gtk.Window) else None,
+                None,
+                self._on_file_dialog_finish,
+            )
         except Exception:
             pass
 
@@ -150,9 +202,14 @@ class PomodoroView(Gtk.Box):
         val = scale.get_value() / 100.0
         self.audio_service.set_volume(val)
 
-    def _on_audio_state_changed(self, is_playing, current_track, volume):
-        icon = "media-playback-pause-symbolic" if is_playing else "media-playback-start-symbolic"
+    def _on_audio_state_changed(self, is_playing, current_track_name, volume):
+        icon = (
+            "media-playback-pause-symbolic"
+            if is_playing
+            else "media-playback-start-symbolic"
+        )
         self.music_play_button.set_icon_name(icon)
+        self.title_marquee.set_text(current_track_name)
 
     # Status and Stats display
     def _update_status_label(self):
@@ -161,5 +218,9 @@ class PomodoroView(Gtk.Box):
         self.status_label.set_label(f"● {mode_title} · {state}")
 
     def _update_stats_display(self):
-        self.sessions_today_value.set_label(format_sessions(self.timer_service.sessions_completed))
-        self.focus_time_value.set_label(format_focus_time(self.timer_service.focus_seconds_total))
+        self.sessions_today_value.set_label(
+            format_sessions(self.timer_service.sessions_completed)
+        )
+        self.focus_time_value.set_label(
+            format_focus_time(self.timer_service.focus_seconds_total)
+        )

@@ -1,20 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="Adw" version="1.0"/>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
 
   <template class="MaldoroWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">MalDoro</property>
     <property name="default-width">400</property>
-    <property name="default-height">640</property>
+    <property name="default-height">680</property>
     <property name="width-request">320</property>
-    <property name="height-request">615</property>
+    <property name="height-request">560</property>
 
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
-            <property name="show-title">True</property>
+            <property name="title-widget">
+              <object class="AdwViewSwitcherTitle" id="view_switcher_title">
+                <property name="stack">stack</property>
+                <property name="title" translatable="yes">MalDoro</property>
+              </object>
+            </property>
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="icon-name">open-menu-symbolic</property>
@@ -26,8 +31,35 @@
         </child>
 
         <property name="content">
-          <object class="PomodoroView" id="pomodoro_view"/>
+          <object class="AdwViewStack" id="stack">
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">pomodoro</property>
+                <property name="title" translatable="yes">Timer</property>
+                <property name="icon-name">alarm-symbolic</property>
+                <property name="child">
+                  <object class="PomodoroView" id="pomodoro_view" />
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">analytics</property>
+                <property name="title" translatable="yes">Analytics</property>
+                <property name="icon-name">view-list-symbolic</property>
+                <property name="child">
+                  <object class="AnalyticsView" id="analytics_view" />
+                </property>
+              </object>
+            </child>
+          </object>
         </property>
+
+        <child type="bottom">
+          <object class="AdwViewSwitcherBar" id="view_switcher_bar">
+            <property name="stack">stack</property>
+          </object>
+        </child>
       </object>
     </property>
   </template>

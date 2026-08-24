@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="Adw" version="1.0"/>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
 
   <template class="PomodoroView" parent="GtkBox">
     <property name="orientation">vertical</property>
@@ -26,7 +26,7 @@
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
                     <property name="spacing">16</property>
-                    <property name="valign">start</property>
+                    <property name="vexpand">True</property>
 
                     <!-- Mode Switcher -->
                     <child>
@@ -34,8 +34,8 @@
                         <property name="halign">center</property>
                         <property name="spacing">4</property>
                         <style>
-                          <class name="mode-switcher"/>
-                          <class name="linked"/>
+                          <class name="mode-switcher" />
+                          <class name="linked" />
                         </style>
                         <child>
                           <object class="GtkToggleButton" id="mode_focus_toggle">
@@ -66,7 +66,7 @@
                           <object class="GtkLabel" id="status_label">
                             <property name="label" translatable="yes">Focus · Ready</property>
                             <style>
-                              <class name="status-chip"/>
+                              <class name="status-chip" />
                             </style>
                           </object>
                         </child>
@@ -81,8 +81,8 @@
                         <property name="halign">fill</property>
                         <property name="hexpand">True</property>
                         <style>
-                          <class name="card"/>
-                          <class name="timer-hero-card"/>
+                          <class name="card" />
+                          <class name="timer-hero-card" />
                         </style>
 
                         <child>
@@ -90,7 +90,7 @@
                             <property name="label">25:00</property>
                             <property name="halign">center</property>
                             <style>
-                              <class name="timer-display"/>
+                              <class name="timer-display" />
                             </style>
                           </object>
                         </child>
@@ -100,7 +100,7 @@
                             <property name="label" translatable="yes">REMAINING</property>
                             <property name="halign">center</property>
                             <style>
-                              <class name="timer-phase-caption"/>
+                              <class name="timer-phase-caption" />
                             </style>
                           </object>
                         </child>
@@ -110,7 +110,7 @@
                             <property name="fraction">0.0</property>
                             <property name="hexpand">True</property>
                             <style>
-                              <class name="timer-progress"/>
+                              <class name="timer-progress" />
                             </style>
                           </object>
                         </child>
@@ -134,9 +134,9 @@
                             <property name="width-request">40</property>
                             <property name="height-request">40</property>
                             <style>
-                              <class name="circular"/>
-                              <class name="secondary-action-btn"/>
-                              <class name="flat"/>
+                              <class name="circular" />
+                              <class name="secondary-action-btn" />
+                              <class name="flat" />
                             </style>
                           </object>
                         </child>
@@ -148,9 +148,9 @@
                             <property name="width-request">124</property>
                             <property name="height-request">42</property>
                             <style>
-                              <class name="suggested-action"/>
-                              <class name="pill"/>
-                              <class name="start-button"/>
+                              <class name="suggested-action" />
+                              <class name="pill" />
+                              <class name="start-button" />
                             </style>
                           </object>
                         </child>
@@ -162,9 +162,9 @@
                             <property name="width-request">40</property>
                             <property name="height-request">40</property>
                             <style>
-                              <class name="circular"/>
-                              <class name="secondary-action-btn"/>
-                              <class name="flat"/>
+                              <class name="circular" />
+                              <class name="secondary-action-btn" />
+                              <class name="flat" />
                             </style>
                           </object>
                         </child>
@@ -177,55 +177,83 @@
                         <property name="orientation">vertical</property>
                         <property name="spacing">12</property>
                         <style>
-                          <class name="card"/>
-                          <class name="ambient-card"/>
+                          <class name="card" />
+                          <class name="ambient-card" />
                         </style>
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
+                            <property name="orientation">vertical</property>
                             <property name="spacing">12</property>
-
-                            <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">audio-headphones-symbolic</property>
-                                <property name="pixel-size">20</property>
-                                <style>
-                                  <class name="accent"/>
-                                </style>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="card" />
+                              <class name="ambient-card" />
+                            </style>
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">2</property>
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
                                 <property name="hexpand">True</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Focus Ambience</property>
-                                    <property name="halign">start</property>
-                                    <style>
-                                      <class name="heading"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Ambient soundscapes for deep focus</property>
-                                    <property name="halign">start</property>
-                                    <style>
-                                      <class name="caption"/>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
 
-                            <child>
-                              <object class="GtkSwitch" id="music_switch">
-                                <property name="valign">center</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">audio-headphones-symbolic</property>
+                                    <property name="pixel-size">20</property>
+                                    <style>
+                                      <class name="accent" />
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">2</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="halign">fill</property>
+
+                                    <child>
+                                      <object class="GtkScrolledWindow" id="title_scroll">
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="vscrollbar-policy">never</property>
+                                        <property name="propagate-natural-width">False</property>
+                                        <property name="propagate-natural-height">True</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="child">
+                                          <object class="GtkLabel" id="title_label">
+                                            <property name="label" translatable="yes">Focus Ambience</property>
+                                            <property name="halign">start</property>
+                                            <property name="xalign">0</property>
+                                            <style>
+                                              <class name="heading" />
+                                              <class name="title-marquee" />
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Ambient soundscapes for deep focus</property>
+                                        <property name="halign">start</property>
+                                        <property name="ellipsize">end</property>
+                                        <property name="max-width-chars">30</property>
+                                        <style>
+                                          <class name="caption" />
+                                          <class name="dim-label" />
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkSwitch" id="music_switch">
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -238,9 +266,10 @@
                             <property name="sensitive">False</property>
 
                             <child>
-                              <object class="GtkDropDown" id="track_dropdown">
-                                <property name="hexpand">True</property>
-                              </object>
+                                <object class="GtkDropDown" id="track_dropdown">
+                                  <property name="hexpand">True</property>
+                                  <property name="width-request">1</property>
+                                </object>
                             </child>
 
                             <child>
@@ -248,8 +277,8 @@
                                 <property name="icon-name">folder-open-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Choose local audio file</property>
                                 <style>
-                                  <class name="circular"/>
-                                  <class name="flat"/>
+                                  <class name="circular" />
+                                  <class name="flat" />
                                 </style>
                               </object>
                             </child>
@@ -259,8 +288,8 @@
                                 <property name="icon-name">media-playback-start-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Play / Pause</property>
                                 <style>
-                                  <class name="circular"/>
-                                  <class name="flat"/>
+                                  <class name="circular" />
+                                  <class name="flat" />
                                 </style>
                               </object>
                             </child>
@@ -275,7 +304,7 @@
                                     <property name="icon-name">audio-volume-low-symbolic</property>
                                     <property name="pixel-size">14</property>
                                     <style>
-                                      <class name="dim-label"/>
+                                      <class name="dim-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -298,7 +327,7 @@
                                     <property name="icon-name">audio-volume-high-symbolic</property>
                                     <property name="pixel-size">14</property>
                                     <style>
-                                      <class name="dim-label"/>
+                                      <class name="dim-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -321,9 +350,10 @@
                           <object class="GtkBox">
                             <property name="orientation">vertical</property>
                             <property name="spacing">6</property>
+                            <property name="vexpand">True</property>
                             <style>
-                              <class name="card"/>
-                              <class name="stat-box"/>
+                              <class name="card" />
+                              <class name="stat-box" />
                             </style>
 
                             <child>
@@ -332,10 +362,10 @@
                                 <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkImage">
-                                    <property name="icon-name">trophy-symbolic</property>
+                                    <property name="icon-name">emblem-ok-symbolic</property>
                                     <property name="pixel-size">16</property>
                                     <style>
-                                      <class name="dim-label"/>
+                                      <class name="dim-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -344,7 +374,7 @@
                                     <property name="label" translatable="yes">Completed</property>
                                     <property name="halign">start</property>
                                     <style>
-                                      <class name="stat-label"/>
+                                      <class name="stat-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -355,7 +385,7 @@
                                 <property name="label">0 sessions</property>
                                 <property name="halign">start</property>
                                 <style>
-                                  <class name="stat-value"/>
+                                  <class name="stat-value" />
                                 </style>
                               </object>
                             </child>
@@ -367,8 +397,8 @@
                             <property name="orientation">vertical</property>
                             <property name="spacing">6</property>
                             <style>
-                              <class name="card"/>
-                              <class name="stat-box"/>
+                              <class name="card" />
+                              <class name="stat-box" />
                             </style>
 
                             <child>
@@ -380,7 +410,7 @@
                                     <property name="icon-name">preferences-system-time-symbolic</property>
                                     <property name="pixel-size">16</property>
                                     <style>
-                                      <class name="dim-label"/>
+                                      <class name="dim-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -389,7 +419,7 @@
                                     <property name="label" translatable="yes">Focus Time</property>
                                     <property name="halign">start</property>
                                     <style>
-                                      <class name="stat-label"/>
+                                      <class name="stat-label" />
                                     </style>
                                   </object>
                                 </child>
@@ -400,7 +430,7 @@
                                 <property name="label">0m</property>
                                 <property name="halign">start</property>
                                 <style>
-                                  <class name="stat-value"/>
+                                  <class name="stat-value" />
                                 </style>
                               </object>
                             </child>

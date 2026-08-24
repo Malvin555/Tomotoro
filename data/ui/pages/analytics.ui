@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
+
+  <template class="AnalyticsView" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="hscrollbar-policy">never</property>
+        <property name="vexpand">True</property>
+        <child>
+          <object class="AdwClamp">
+            <property name="maximum-size">460</property>
+            <property name="tightening-threshold">360</property>
+            <property name="margin-start">16</property>
+            <property name="margin-end">16</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">16</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">16</property>
+                <property name="vexpand">True</property>
+
+                <!-- Hero -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">16</property>
+                    <property name="valign">center</property>
+                    <style>
+                      <class name="card" />
+                      <class name="analytics-hero" />
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="width-request">52</property>
+                        <property name="height-request">52</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <style>
+                          <class name="analytics-hero-badge" />
+                        </style>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">preferences-system-time-symbolic</property>
+                            <property name="pixel-size">24</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">2</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">TOTAL FOCUS TIME</property>
+                            <property name="halign">start</property>
+                            <style><class name="analytics-hero-caption" /></style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="total_focus_value">
+                            <property name="label">0h 0m</property>
+                            <property name="halign">start</property>
+                            <style><class name="analytics-hero-value" /></style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">2</property>
+                        <property name="halign">end</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">SESSIONS</property>
+                            <property name="halign">end</property>
+                            <style><class name="analytics-hero-caption" /></style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="total_sessions_value">
+                            <property name="label">0</property>
+                            <property name="halign">end</property>
+                            <style><class name="analytics-hero-value" /></style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Weekly chart -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">10</property>
+                    <property name="vexpand">True</property>
+                    <style>
+                      <class name="card" />
+                      <class name="analytics-chart-card" />
+                    </style>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">This Week</property>
+                        <property name="halign">start</property>
+                        <style><class name="heading" /></style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="chart_container">
+                        <property name="orientation">vertical</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Mini stats -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">14</property>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
+                        <style><class name="card" /><class name="stat-box" /></style>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">weather-clear-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style><class name="dim-label" /></style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Streak</property>
+                                <property name="halign">start</property>
+                                <style><class name="stat-label" /></style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="streak_value">
+                            <property name="label">0d</property>
+                            <property name="halign">start</property>
+                            <style><class name="stat-value" /></style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
+                        <style><class name="card" /><class name="stat-box" /></style>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">audio-headphones-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style><class name="dim-label" /></style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Top Track</property>
+                                <property name="halign">start</property>
+                                <style><class name="stat-label" /></style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="hscrollbar-policy">never</property>
+                            <property name="vscrollbar-policy">never</property>
+                            <property name="propagate-natural-width">False</property>
+                            <property name="propagate-natural-height">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="child">
+                              <object class="GtkLabel" id="most_played_value">
+                                <property name="label">—</property>
+                                <property name="halign">start</property>
+                                <property name="xalign">0</property>
+                                <style><class name="stat-value" /></style>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="most_played_count">
+                            <property name="label">No plays yet</property>
+                            <property name="halign">start</property>
+                            <style><class name="dim-label" /><class name="caption" /></style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

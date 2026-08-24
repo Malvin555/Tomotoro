@@ -30,6 +30,7 @@ install_data(
   [
     '__init__.py',
     'main.py',
+    'constant.py',
   ],
   install_dir: moduledir,
 )

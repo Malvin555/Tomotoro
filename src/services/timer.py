@@ -1,21 +1,10 @@
-# Timer business logic service
 from gi.repository import GLib
+
+from ..constant import MODE_FOCUS, MODE_LONG, MODE_SHORT
 from .settings import SettingsService
-
-MODE_FOCUS = "focus"
-MODE_SHORT = "short"
-MODE_LONG = "long"
-
-MODE_TITLES = {
-    MODE_FOCUS: "Focus",
-    MODE_SHORT: "Short Break",
-    MODE_LONG: "Long Break",
-}
 
 
 class TimerService:
-    """Encapsulates the Pomodoro timer countdown and state management."""
-
     def __init__(self):
         self.settings = SettingsService.get_default()
         self.mode = MODE_FOCUS
@@ -97,10 +86,16 @@ class TimerService:
         if self.mode == MODE_FOCUS:
             self.focus_seconds_total += 1
 
-        fraction = 1.0 - (self.seconds_left / self.total_seconds) if self.total_seconds > 0 else 0.0
+        fraction = (
+            1.0 - (self.seconds_left / self.total_seconds)
+            if self.total_seconds > 0
+            else 0.0
+        )
         for callback in self.on_tick_callbacks:
             try:
-                callback(self.seconds_left, self.total_seconds, max(0.0, min(1.0, fraction)))
+                callback(
+                    self.seconds_left, self.total_seconds, max(0.0, min(1.0, fraction))
+                )
             except Exception:
                 pass
 
@@ -120,9 +115,19 @@ class TimerService:
         self._notify_state_change()
 
     def _notify_state_change(self):
-        fraction = 1.0 - (self.seconds_left / self.total_seconds) if self.total_seconds > 0 else 0.0
+        fraction = (
+            1.0 - (self.seconds_left / self.total_seconds)
+            if self.total_seconds > 0
+            else 0.0
+        )
         for callback in self.on_state_change_callbacks:
             try:
-                callback(self.mode, self.running, self.seconds_left, self.total_seconds, max(0.0, min(1.0, fraction)))
+                callback(
+                    self.mode,
+                    self.running,
+                    self.seconds_left,
+                    self.total_seconds,
+                    max(0.0, min(1.0, fraction)),
+                )
             except Exception:
                 pass

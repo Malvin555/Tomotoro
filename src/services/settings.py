@@ -1,12 +1,9 @@
-# Settings management service
 from gi.repository import Gio
 
 SCHEMA_ID = "org.maldoro.fyvin"
 
 
 class SettingsService:
-    """Manages application settings and schema bindings with fallback support."""
-
     _instance = None
 
     @classmethod
@@ -37,12 +34,10 @@ class SettingsService:
                 pass
 
     def add_listener(self, callback):
-        """Register a callback for settings changes."""
         if callback not in self._listeners:
             self._listeners.append(callback)
 
     def remove_listener(self, callback):
-        """Unregister a settings change callback."""
         if callback in self._listeners:
             self._listeners.remove(callback)
 
@@ -77,8 +72,13 @@ class SettingsService:
     def is_sound_enabled(self) -> bool:
         return self.get_boolean("sound-enabled", True)
 
-    def bind(self, key: str, object_instance, property_name: str, flags=Gio.SettingsBindFlags.DEFAULT):
-        """Bind a setting key to a widget property."""
+    def bind(
+        self,
+        key: str,
+        object_instance,
+        property_name: str,
+        flags=Gio.SettingsBindFlags.DEFAULT,
+    ):
         if self.settings:
             try:
                 self.settings.bind(key, object_instance, property_name, flags)
