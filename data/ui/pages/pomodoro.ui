@@ -183,77 +183,82 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">vertical</property>
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
+                            <property name="hexpand">True</property>
                             <style>
-                              <class name="card" />
-                              <class name="ambient-card" />
+                              <class name="title-row" />
                             </style>
 
                             <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">audio-headphones-symbolic</property>
+                                <property name="pixel-size">20</property>
+                                <property name="valign">start</property>
+                                <property name="margin-top">2</property>
+                                <style>
+                                  <class name="accent" />
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
-                                <property name="spacing">12</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">2</property>
                                 <property name="hexpand">True</property>
+                                <property name="halign">fill</property>
+                                <style>
+                                  <class name="title-text-col" />
+                                </style>
 
                                 <child>
-                                  <object class="GtkImage">
-                                    <property name="icon-name">audio-headphones-symbolic</property>
-                                    <property name="pixel-size">20</property>
+                                  <object class="GtkScrolledWindow" id="title_scroll">
+                                    <property name="hscrollbar-policy">external</property>
+                                    <property name="vscrollbar-policy">never</property>
+                                    <property name="propagate-natural-width">False</property>
+                                    <property name="propagate-natural-height">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="halign">fill</property>
+                                    <property name="width-request">1</property>
                                     <style>
-                                      <class name="accent" />
+                                      <class name="title-scroll" />
+                                    </style>
+                                    <property name="child">
+                                      <object class="GtkLabel" id="title_label">
+                                        <property name="label" translatable="yes">Focus Ambience</property>
+                                        <property name="halign">start</property>
+                                        <property name="hexpand">False</property>
+                                        <property name="xalign">0</property>
+                                        <property name="wrap">False</property>
+                                        <property name="single-line-mode">True</property>
+                                        <style>
+                                          <class name="heading" />
+                                          <class name="title-marquee" />
+                                        </style>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Ambient soundscapes for deep focus</property>
+                                    <property name="halign">start</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="max-width-chars">28</property>
+                                    <style>
+                                      <class name="caption" />
+                                      <class name="dim-label" />
                                     </style>
                                   </object>
                                 </child>
+                              </object>
+                            </child>
 
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="orientation">vertical</property>
-                                    <property name="spacing">2</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="halign">fill</property>
-
-                                    <child>
-                                      <object class="GtkScrolledWindow" id="title_scroll">
-                                        <property name="hscrollbar-policy">never</property>
-                                        <property name="vscrollbar-policy">never</property>
-                                        <property name="propagate-natural-width">False</property>
-                                        <property name="propagate-natural-height">True</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="child">
-                                          <object class="GtkLabel" id="title_label">
-                                            <property name="label" translatable="yes">Focus Ambience</property>
-                                            <property name="halign">start</property>
-                                            <property name="xalign">0</property>
-                                            <style>
-                                              <class name="heading" />
-                                              <class name="title-marquee" />
-                                            </style>
-                                          </object>
-                                        </property>
-                                      </object>
-                                    </child>
-
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Ambient soundscapes for deep focus</property>
-                                        <property name="halign">start</property>
-                                        <property name="ellipsize">end</property>
-                                        <property name="max-width-chars">30</property>
-                                        <style>
-                                          <class name="caption" />
-                                          <class name="dim-label" />
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkSwitch" id="music_switch">
-                                    <property name="valign">center</property>
-                                  </object>
-                                </child>
+                            <child>
+                              <object class="GtkSwitch" id="music_switch">
+                                <property name="valign">center</property>
                               </object>
                             </child>
                           </object>
@@ -264,18 +269,26 @@
                             <property name="orientation">horizontal</property>
                             <property name="spacing">10</property>
                             <property name="sensitive">False</property>
+                            <property name="hexpand">True</property>
+                            <style>
+                              <class name="music-controls" />
+                            </style>
 
                             <child>
-                                <object class="GtkDropDown" id="track_dropdown">
-                                  <property name="hexpand">True</property>
-                                  <property name="width-request">1</property>
-                                </object>
+                              <object class="GtkBox" id="track_picker_box">
+                                <property name="hexpand">True</property>
+                                <property name="halign">fill</property>
+                                <property name="width-request">1</property>
+                                <style>
+                                  <class name="track-dropdown" />
+                                </style>
+                              </object>
                             </child>
 
                             <child>
                               <object class="GtkButton" id="music_file_button">
                                 <property name="icon-name">folder-open-symbolic</property>
-                                <property name="tooltip-text" translatable="yes">Choose local audio file</property>
+                                <property name="tooltip-text" translatable="yes">Add local audio file</property>
                                 <style>
                                   <class name="circular" />
                                   <class name="flat" />
@@ -389,6 +402,13 @@
                                 </style>
                               </object>
                             </child>
+                            <child>
+                              <object class="GtkBox" id="sessions_viz_box">
+                                <property name="orientation">vertical</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-top">2</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
 
@@ -432,6 +452,13 @@
                                 <style>
                                   <class name="stat-value" />
                                 </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="focus_viz_box">
+                                <property name="orientation">vertical</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-top">2</property>
                               </object>
                             </child>
                           </object>

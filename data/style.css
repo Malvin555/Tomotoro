@@ -130,10 +130,58 @@
     font-size: 14px;
 }
 
-/* Title with ellipsis - GTK native way */
+/* Keep long titles / track names from forcing window growth */
+.title-row,
+.title-text-col,
+.title-scroll,
+.music-controls,
+.track-dropdown {
+    min-width: 0;
+}
+
+.title-scroll {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.title-scroll > scrollbar,
+.title-scroll scrollbar {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+}
+
 .title-marquee {
     font-weight: 600;
     font-size: 14px;
+}
+
+.track-dropdown {
+    min-width: 0;
+}
+
+.track-dropdown-button {
+    min-width: 0;
+    padding-left: 8px;
+    padding-right: 6px;
+}
+
+.track-dropdown-title {
+    min-width: 0;
+}
+
+.track-dropdown-popover {
+    min-width: 0;
+}
+
+.track-dropdown-list row {
+    min-width: 0;
+    padding: 6px 10px;
+}
+
+.track-dropdown-list label {
+    min-width: 0;
 }
 
 /* Stat Cards */
@@ -161,6 +209,11 @@
     color: @card_fg_color;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
+}
+
+.stat-viz {
+    min-height: 28px;
+    opacity: 0.95;
 }
 /* Analytics page */
 .analytics-hero {

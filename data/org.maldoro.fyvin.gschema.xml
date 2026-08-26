@@ -36,6 +36,21 @@
 			<summary>Play sound on completion</summary>
 			<description>Play a notification sound when a session finishes.</description>
 		</key>
+		<key name="custom-tracks" type="as">
+			<default>[]</default>
+			<summary>Custom ambient tracks</summary>
+			<description>Absolute paths of user-selected custom music files.</description>
+		</key>
+		<key name="selected-track" type="s">
+			<default>'preset:0'</default>
+			<summary>Selected ambient track</summary>
+			<description>Currently selected track key, e.g. preset:0 or custom:/path/to/file.</description>
+		</key>
+		<key name="play-music-with-timer" type="b">
+			<default>false</default>
+			<summary>Play music with Pomodoro</summary>
+			<description>Automatically play ambient music when a Pomodoro session starts.</description>
+		</key>
 	</schema>
 </schemalist>
 

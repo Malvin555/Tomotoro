@@ -9,7 +9,10 @@
     "--share=ipc",
     "--socket=fallback-x11",
     "--device=dri",
-    "--socket=wayland"
+    "--socket=wayland",
+    "--socket=pulseaudio",
+    "--filesystem=xdg-music:ro",
+    "--filesystem=home:ro"
   ],
   "cleanup": [
     "/include",

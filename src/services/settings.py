@@ -15,6 +15,18 @@ class SettingsService:
     def __init__(self):
         self.settings = None
         self._listeners = []
+        self._fallback = {
+            "focus-length": 25,
+            "short-break-length": 5,
+            "long-break-length": 15,
+            "sessions-until-long-break": 4,
+            "auto-start-breaks": False,
+            "auto-start-focus": False,
+            "sound-enabled": True,
+            "custom-tracks": [],
+            "selected-track": "preset:0",
+            "play-music-with-timer": False,
+        }
         self._init_settings()
 
     def _init_settings(self):
@@ -47,7 +59,7 @@ class SettingsService:
                 return self.settings.get_int(key)
             except Exception:
                 pass
-        return default
+        return self._fallback.get(key, default)
 
     def get_boolean(self, key: str, default: bool) -> bool:
         if self.settings:
@@ -55,7 +67,44 @@ class SettingsService:
                 return self.settings.get_boolean(key)
             except Exception:
                 pass
-        return default
+        return self._fallback.get(key, default)
+
+    def get_string(self, key: str, default: str = "") -> str:
+        if self.settings:
+            try:
+                return self.settings.get_string(key)
+            except Exception:
+                pass
+        return self._fallback.get(key, default)
+
+    def set_string(self, key: str, value: str):
+        if self.settings:
+            try:
+                self.settings.set_string(key, value)
+                return
+            except Exception:
+                pass
+        self._fallback[key] = value
+        self._on_changed(None, key)
+
+    def get_strv(self, key: str) -> list:
+        if self.settings:
+            try:
+                return list(self.settings.get_strv(key))
+            except Exception:
+                pass
+        return list(self._fallback.get(key, []))
+
+    def set_strv(self, key: str, values: list):
+        values = list(values)
+        if self.settings:
+            try:
+                self.settings.set_strv(key, values)
+                return
+            except Exception:
+                pass
+        self._fallback[key] = values
+        self._on_changed(None, key)
 
     def get_focus_length(self) -> int:
         return self.get_int("focus-length", 25)
@@ -71,6 +120,9 @@ class SettingsService:
 
     def is_sound_enabled(self) -> bool:
         return self.get_boolean("sound-enabled", True)
+
+    def is_play_music_with_timer(self) -> bool:
+        return self.get_boolean("play-music-with-timer", False)
 
     def bind(
         self,
