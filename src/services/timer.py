@@ -23,6 +23,7 @@ class TimerService:
 
         self.on_tick_callbacks = []
         self.on_complete_callbacks = []
+        self.on_skip_callbacks = []
         self.on_state_change_callbacks = []
 
         self.settings.add_listener(self._on_settings_changed)
@@ -40,7 +41,7 @@ class TimerService:
             self._notify_state_change()
 
     def set_mode(self, mode: str):
-        if mode not in self.durations:
+        if mode not in self.durations or self.running:
             return
         self.stop()
         self.mode = mode
@@ -57,11 +58,13 @@ class TimerService:
         self._notify_state_change()
 
     def stop(self):
+        was_running = self.running
         self.running = False
         if self.timer_source_id is not None:
             GLib.source_remove(self.timer_source_id)
             self.timer_source_id = None
-        self._notify_state_change()
+        if was_running:
+            self._notify_state_change()
 
     def toggle(self):
         if self.running:
@@ -75,59 +78,61 @@ class TimerService:
         self._notify_state_change()
 
     def skip(self):
-        self._on_complete()
+        mode = self.mode
+        self.stop()
+        self.seconds_left = self.total_seconds
+        for callback in list(self.on_skip_callbacks):
+            try:
+                callback(mode)
+            except Exception:
+                pass
+        self._notify_state_change()
 
     def _tick(self):
         if self.seconds_left <= 0:
-            self._on_complete()
+            self._finish_naturally()
             return False
 
         self.seconds_left -= 1
         if self.mode == MODE_FOCUS:
             self.focus_seconds_total += 1
 
-        fraction = (
-            1.0 - (self.seconds_left / self.total_seconds)
-            if self.total_seconds > 0
-            else 0.0
-        )
-        for callback in self.on_tick_callbacks:
+        fraction = self._fraction()
+        for callback in list(self.on_tick_callbacks):
             try:
-                callback(
-                    self.seconds_left, self.total_seconds, max(0.0, min(1.0, fraction))
-                )
+                callback(self.seconds_left, self.total_seconds, fraction)
             except Exception:
                 pass
-
         return True
 
-    def _on_complete(self):
+    def _finish_naturally(self):
+        mode = self.mode
         self.stop()
-        if self.mode == MODE_FOCUS:
+        if mode == MODE_FOCUS:
             self.sessions_completed += 1
 
-        for callback in self.on_complete_callbacks:
+        for callback in list(self.on_complete_callbacks):
             try:
-                callback(self.mode, self.sessions_completed)
+                callback(mode, self.sessions_completed)
             except Exception:
                 pass
-
         self._notify_state_change()
 
+    def _fraction(self) -> float:
+        if self.total_seconds <= 0:
+            return 0.0
+        return max(0.0, min(1.0, 1.0 - (self.seconds_left / self.total_seconds)))
+
     def _notify_state_change(self):
-        fraction = (
-            1.0 - (self.seconds_left / self.total_seconds)
-            if self.total_seconds > 0
-            else 0.0
-        )
-        for callback in self.on_state_change_callbacks:
+        fraction = self._fraction()
+        for callback in list(self.on_state_change_callbacks):
             try:
                 callback(
                     self.mode,
                     self.running,
                     self.seconds_left,
                     self.total_seconds,
-                    max(0.0, min(1.0, fraction)),
+                    fraction,
                 )
             except Exception:
                 pass

@@ -1,19 +1,15 @@
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-from ..constant import MODE_TITLES
+from ..constant import MODE_FOCUS, MODE_TITLES
 from ..services.analytics import AnalyticsService
 from ..services.audio import AudioService
 from ..services.settings import SettingsService
-from ..services.timer import (
-    MODE_FOCUS,
-    MODE_LONG,
-    MODE_SHORT,
-    TimerService,
-)
+from ..services.timer import TimerService
 from ..utils.formatters import format_focus_time, format_sessions, format_time
 from ..utils.marquee import MarqueeLabel
 from ..utils.stat_viz import LiveStatViz
 from ..utils.track_dropdown import TrackDropDown
+from .helpers import ModeSwitcher, MusicSessionGate
 
 
 @Gtk.Template(resource_path="/org/maldoro/fyvin/pomodoro.ui")
@@ -46,19 +42,15 @@ class PomodoroView(Gtk.Box):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.timer_service = TimerService()
-        self.audio_service = AudioService.get_default()
-        self.analytics_service = AnalyticsService.get_default()
-        self.timer_service.on_complete_callbacks.append(
-            self.analytics_service.record_session
-        )
-        self.audio_service.on_state_change_callbacks.append(
-            self.analytics_service.record_audio_state
-        )
-        self.settings_service = SettingsService.get_default()
-        self.title_marquee = MarqueeLabel(self.title_scroll, self.title_label)
-        self._was_running = False
+        self.timer = TimerService()
+        self.audio = AudioService.get_default()
+        self.analytics = AnalyticsService.get_default()
+        self.settings = SettingsService.get_default()
 
+        self.timer.on_complete_callbacks.append(self.analytics.record_session)
+        self.audio.on_state_change_callbacks.append(self.analytics.record_audio_state)
+
+        self.title_marquee = MarqueeLabel(self.title_scroll, self.title_label)
         self.track_dropdown = TrackDropDown()
         self.track_picker_box.append(self.track_dropdown)
 
@@ -67,39 +59,38 @@ class PomodoroView(Gtk.Box):
         self.sessions_viz_box.append(self.sessions_viz)
         self.focus_viz_box.append(self.focus_viz)
 
-        self._setup_signals()
-        self._setup_audio_tracks()
+        self.mode_switcher = ModeSwitcher(
+            self.mode_focus_toggle,
+            self.mode_short_toggle,
+            self.mode_long_toggle,
+            on_mode_chosen=self.timer.set_mode,
+        )
+        self.music_gate = MusicSessionGate(
+            self.music_switch,
+            self.music_controls_box,
+            self.title_marquee,
+            self.track_dropdown,
+            self.audio,
+        )
+
+        self._was_running = False
+        self._connect_signals()
+        self._reload_tracks()
         self._sync_view()
-        self.title_marquee.set_text(self.audio_service.current_track_name)
-        self._update_music_gate()
+        self.title_marquee.set_text(self.audio.current_track_name)
 
-    def _setup_signals(self):
-        self.timer_service.on_tick_callbacks.append(self._on_timer_tick)
-        self.timer_service.on_complete_callbacks.append(self._on_timer_complete)
-        self.timer_service.on_state_change_callbacks.append(
-            self._on_timer_state_changed
-        )
+    def _connect_signals(self):
+        self.timer.on_tick_callbacks.append(self._on_timer_tick)
+        self.timer.on_complete_callbacks.append(self._on_timer_finished)
+        self.timer.on_skip_callbacks.append(self._on_timer_skipped)
+        self.timer.on_state_change_callbacks.append(self._on_timer_state_changed)
 
-        self.audio_service.on_state_change_callbacks.append(
-            self._on_audio_state_changed
-        )
-        self.audio_service.on_tracks_change_callbacks.append(
-            self._on_tracks_changed
-        )
+        self.audio.on_state_change_callbacks.append(self._on_audio_state_changed)
+        self.audio.on_tracks_change_callbacks.append(lambda _t: self._reload_tracks())
 
-        self.mode_focus_toggle.connect(
-            "toggled", self._on_mode_button_toggled, MODE_FOCUS
-        )
-        self.mode_short_toggle.connect(
-            "toggled", self._on_mode_button_toggled, MODE_SHORT
-        )
-        self.mode_long_toggle.connect(
-            "toggled", self._on_mode_button_toggled, MODE_LONG
-        )
-
-        self.start_button.connect("clicked", lambda *_: self.timer_service.toggle())
-        self.reset_button.connect("clicked", lambda *_: self.timer_service.reset())
-        self.skip_button.connect("clicked", lambda *_: self.timer_service.skip())
+        self.start_button.connect("clicked", lambda *_: self.timer.toggle())
+        self.reset_button.connect("clicked", lambda *_: self.timer.reset())
+        self.skip_button.connect("clicked", lambda *_: self.timer.skip())
 
         self.music_switch.connect("notify::active", self._on_music_switch_toggled)
         self.track_dropdown.connect("track-selected", self._on_track_selected)
@@ -107,60 +98,24 @@ class PomodoroView(Gtk.Box):
         self.music_play_button.connect("clicked", self._on_music_play_clicked)
         self.volume_scale.connect("value-changed", self._on_volume_changed)
 
-    def _setup_audio_tracks(self):
-        tracks = self.audio_service.get_track_list()
-        selected = min(self.audio_service.current_index, max(0, len(tracks) - 1))
+    def _reload_tracks(self):
+        tracks = self.audio.get_track_list()
+        selected = min(self.audio.current_index, max(0, len(tracks) - 1))
         self.track_dropdown.set_tracks(tracks, selected)
 
-    def _on_tracks_changed(self, _tracks):
-        self._setup_audio_tracks()
-
     def _sync_view(self):
-        self.timer_label.set_label(format_time(self.timer_service.seconds_left))
+        self.timer_label.set_label(format_time(self.timer.seconds_left))
+        self.mode_switcher.sync(self.timer.mode)
         self._update_status_label()
-        self._update_stats_display()
-        self._update_mode_lock()
-        self._update_music_gate()
-
-    def _on_mode_button_toggled(self, button, mode):
-        if self.timer_service.running:
-            # Revert UI to the active mode; changes are locked while running.
-            self._sync_mode_toggles()
-            return
-        if button.get_active():
-            self.timer_service.set_mode(mode)
-
-    def _sync_mode_toggles(self):
-        mode = self.timer_service.mode
-        self.mode_focus_toggle.set_active(mode == MODE_FOCUS)
-        self.mode_short_toggle.set_active(mode == MODE_SHORT)
-        self.mode_long_toggle.set_active(mode == MODE_LONG)
-
-    def _update_mode_lock(self):
-        locked = self.timer_service.running
-        for button in (
-            self.mode_focus_toggle,
-            self.mode_short_toggle,
-            self.mode_long_toggle,
-        ):
-            button.set_sensitive(not locked)
-
-    def _update_music_gate(self):
-        """Music can only be used while a Pomodoro session is running."""
-        running = self.timer_service.running
-        self.music_controls_box.set_sensitive(running)
-        self.music_switch.set_sensitive(running)
-        if not running and self.audio_service.is_playing:
-            self.audio_service.stop()
-        playing = running and self.audio_service.is_playing
-        self.title_marquee.set_active(playing)
-        self.track_dropdown.set_marquee_active(playing)
+        self._update_stats()
+        self.mode_switcher.set_locked(self.timer.running)
+        self.music_gate.refresh(self.timer.running, self.audio.is_playing)
 
     def _on_timer_tick(self, seconds_left, total_seconds, fraction):
         self.timer_label.set_label(format_time(seconds_left))
         self.progress_bar.set_fraction(fraction)
-        if self.timer_service.mode == MODE_FOCUS:
-            self._update_stats_display()
+        if self.timer.mode == MODE_FOCUS:
+            self._update_stats()
 
     def _on_timer_state_changed(
         self, mode, running, seconds_left, total_seconds, fraction
@@ -168,65 +123,74 @@ class PomodoroView(Gtk.Box):
         self.timer_label.set_label(format_time(seconds_left))
         self.progress_bar.set_fraction(fraction)
         self.start_button.set_label("Pause" if running else "Start")
+        self.mode_switcher.sync(mode)
         self._update_status_label()
-        self._update_stats_display()
-        self._update_mode_lock()
+        self._update_stats()
+        self.mode_switcher.set_locked(running)
         self._sync_music_with_timer(running)
-        self._update_music_gate()
+        self.music_gate.refresh(running, self.audio.is_playing)
 
-    def _sync_music_with_timer(self, running: bool):
-        if running and not self._was_running:
-            if self.settings_service.is_play_music_with_timer():
-                if not self.music_switch.get_active():
-                    self.music_switch.set_active(True)
-                self.audio_service.play()
-        elif not running and self._was_running:
-            self.audio_service.stop()
-            # Allow choosing music intent again only after stop/skip/complete.
-            # Switch stays as-is but gated off until next start.
-        self._was_running = running
-
-    def _on_timer_complete(self, mode, sessions_completed):
-        if self.settings_service.is_sound_enabled():
+    def _on_timer_finished(self, mode, sessions_completed):
+        if self.settings.is_sound_enabled():
             display = Gdk.Display.get_default()
             if display:
                 display.beep()
 
-        mode_name = MODE_TITLES.get(mode, "Session")
-        toast = Adw.Toast.new(f"{mode_name} complete!")
+        toast = Adw.Toast.new(f"{MODE_TITLES.get(mode, 'Session')} complete!")
         toast.set_timeout(3)
         self.toast_overlay.add_toast(toast)
-        self._update_stats_display()
-        self.audio_service.stop()
+
+        self.audio.stop()
         self._was_running = False
-        self._update_mode_lock()
-        self._update_music_gate()
+        self._update_stats()
+        self.mode_switcher.set_locked(False)
+        self.music_gate.refresh(False, False)
+
+    def _on_timer_skipped(self, mode):
+        toast = Adw.Toast.new(f"{MODE_TITLES.get(mode, 'Session')} skipped")
+        toast.set_timeout(2)
+        self.toast_overlay.add_toast(toast)
+
+        self.audio.stop()
+        self._was_running = False
+        self._update_stats()
+        self.mode_switcher.set_locked(False)
+        self.music_gate.refresh(False, False)
+
+    def _sync_music_with_timer(self, running: bool):
+        if running and not self._was_running:
+            if self.settings.is_play_music_with_timer():
+                if not self.music_switch.get_active():
+                    self.music_switch.set_active(True)
+                self.audio.play()
+        elif not running and self._was_running:
+            self.audio.stop()
+        self._was_running = running
 
     def _on_music_switch_toggled(self, switch, _pspec):
-        if not self.timer_service.running:
+        if not self.timer.running:
             if switch.get_active():
                 switch.set_active(False)
-            self._update_music_gate()
+            self.music_gate.refresh(False, False)
             return
-
         if not switch.get_active():
-            self.audio_service.stop()
-        self._update_music_gate()
+            self.audio.stop()
+        self.music_gate.refresh(True, self.audio.is_playing)
 
     def _on_music_play_clicked(self, _button):
-        if not self.timer_service.running:
+        if not self.timer.running:
             toast = Adw.Toast.new("Start a Pomodoro session to play music")
             toast.set_timeout(2)
             self.toast_overlay.add_toast(toast)
             return
         if not self.music_switch.get_active():
             self.music_switch.set_active(True)
-        self.audio_service.toggle()
+        self.audio.toggle()
 
     def _on_track_selected(self, _picker, index: int):
-        self.audio_service.select_track(index)
+        self.audio.select_track(index)
 
-    def _on_choose_audio_file(self, button):
+    def _on_choose_audio_file(self, _button):
         try:
             dialog = Gtk.FileDialog.new()
             dialog.set_title("Add Ambient Audio")
@@ -254,53 +218,44 @@ class PomodoroView(Gtk.Box):
     def _on_file_dialog_finish(self, dialog, result):
         try:
             file = dialog.open_finish(result)
-            if file:
-                path = file.get_path()
-                self.audio_service.set_custom_file(path)
-                self._setup_audio_tracks()
-                if (
-                    self.timer_service.running
-                    and self.music_switch.get_active()
-                ):
-                    self.audio_service.play()
+            if not file:
+                return
+            self.audio.set_custom_file(file.get_path())
+            self._reload_tracks()
+            if self.timer.running and self.music_switch.get_active():
+                self.audio.play()
         except Exception:
             pass
 
     def _on_volume_changed(self, scale):
-        val = scale.get_value() / 100.0
-        self.audio_service.set_volume(val)
+        self.audio.set_volume(scale.get_value() / 100.0)
 
     def _on_audio_state_changed(self, is_playing, current_track_name, volume):
-        # Enforce: never keep audio playing if Pomodoro is not running.
-        if is_playing and not self.timer_service.running:
-            self.audio_service.stop()
+        if is_playing and not self.timer.running:
+            self.audio.stop()
             return
 
-        icon = (
+        self.music_play_button.set_icon_name(
             "media-playback-pause-symbolic"
             if is_playing
             else "media-playback-start-symbolic"
         )
-        self.music_play_button.set_icon_name(icon)
         self.title_marquee.set_text(current_track_name)
-        self.track_dropdown.set_selected(self.audio_service.current_index)
-        playing = self.timer_service.running and is_playing
-        self.title_marquee.set_active(playing)
-        self.track_dropdown.set_marquee_active(playing)
+        self.track_dropdown.set_selected(self.audio.current_index)
+        self.music_gate.refresh(self.timer.running, is_playing)
 
     def _update_status_label(self):
-        state = "In Progress" if self.timer_service.running else "Ready"
-        mode_title = MODE_TITLES.get(self.timer_service.mode, "Focus")
+        state = "In Progress" if self.timer.running else "Ready"
+        mode_title = MODE_TITLES.get(self.timer.mode, "Focus")
         self.status_label.set_label(f"● {mode_title} · {state}")
 
-    def _update_stats_display(self):
-        sessions = self.timer_service.sessions_completed
-        focus_seconds = self.timer_service.focus_seconds_total
-        running = self.timer_service.running
+    def _update_stats(self):
+        sessions = self.timer.sessions_completed
+        focus_seconds = self.timer.focus_seconds_total
+        running = self.timer.running
 
         self.sessions_today_value.set_label(format_sessions(sessions))
         self.focus_time_value.set_label(format_focus_time(focus_seconds))
-
         self.sessions_viz.set_value(sessions)
         self.sessions_viz.set_active(running)
         self.focus_viz.set_value(focus_seconds)

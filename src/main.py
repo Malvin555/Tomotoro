@@ -26,7 +26,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Adw, Gio, Gtk, Gdk
+from gi.repository import Adw, Gdk, Gio, Gtk
 
 from .view.preferences import MaldoroPreferences
 from .view.window import MaldoroWindow
@@ -50,7 +50,15 @@ class MaldoroApplication(Adw.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
+        self._setup_icons()
         self._setup_css()
+
+    def _setup_icons(self):
+        display = Gdk.Display.get_default()
+        if not display:
+            return
+        theme = Gtk.IconTheme.get_for_display(display)
+        theme.add_resource_path("/org/maldoro/fyvin/icons")
 
     def _setup_css(self):
         provider = Gtk.CssProvider()

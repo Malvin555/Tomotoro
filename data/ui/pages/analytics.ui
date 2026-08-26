@@ -15,9 +15,9 @@
         <child>
           <object class="AdwClamp">
             <property name="maximum-size">460</property>
-            <property name="tightening-threshold">360</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
+            <property name="tightening-threshold">280</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
             <property name="margin-top">12</property>
             <property name="margin-bottom">16</property>
             <child>
@@ -26,7 +26,6 @@
                 <property name="spacing">16</property>
                 <property name="vexpand">True</property>
 
-                <!-- Hero -->
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">horizontal</property>
@@ -48,7 +47,7 @@
                         </style>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">preferences-system-time-symbolic</property>
+                            <property name="icon-name">maldoro-timer-symbolic</property>
                             <property name="pixel-size">24</property>
                           </object>
                         </child>
@@ -101,7 +100,6 @@
                   </object>
                 </child>
 
-                <!-- Weekly chart -->
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -128,7 +126,6 @@
                   </object>
                 </child>
 
-                <!-- Mini stats -->
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">horizontal</property>
@@ -146,7 +143,7 @@
                             <property name="spacing">8</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">weather-clear-symbolic</property>
+                                <property name="icon-name">maldoro-streak-symbolic</property>
                                 <property name="pixel-size">16</property>
                                 <style><class name="dim-label" /></style>
                               </object>
@@ -181,7 +178,7 @@
                             <property name="spacing">8</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">audio-headphones-symbolic</property>
+                                <property name="icon-name">maldoro-music-symbolic</property>
                                 <property name="pixel-size">16</property>
                                 <style><class name="dim-label" /></style>
                               </object>

@@ -46,7 +46,6 @@ def is_supported_audio(path: str) -> bool:
 
 
 def collect_audio_files(paths) -> list:
-    """Return unique existing audio files from files and folders."""
     found = []
     seen = set()
 

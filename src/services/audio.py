@@ -15,8 +15,6 @@ PRESET_TRACKS = [
 
 
 class AudioService:
-    """Shared ambient-audio state and playback for Pomodoro + Preferences."""
-
     _instance = None
     _gst_ready = False
     _Gst = None
@@ -64,7 +62,6 @@ class AudioService:
         self._init_player()
         self.settings.add_listener(self._on_settings_changed)
 
-    # Track list -------------------------------------------------------------
     def get_track_list(self) -> list:
         tracks = list(self.preset_tracks)
         for path in self.custom_tracks:
@@ -183,7 +180,6 @@ class AudioService:
             return
         self.select_track(index)
 
-    # Playback ---------------------------------------------------------------
     def set_volume(self, volume: float):
         self.volume = max(0.0, min(1.0, volume))
         if self._player is not None:
@@ -211,7 +207,6 @@ class AudioService:
             self.is_playing = False
             self._notify_state_change()
 
-    # Callbacks --------------------------------------------------------------
     def _notify_state_change(self):
         for callback in list(self.on_state_change_callbacks):
             try:
@@ -226,12 +221,9 @@ class AudioService:
             except Exception:
                 pass
 
-    # Persistence / internals ------------------------------------------------
     def _load_custom_tracks(self):
         stored = self.settings.get_strv("custom-tracks")
-        self.custom_tracks = [
-            path for path in stored if path and os.path.isfile(path)
-        ]
+        self.custom_tracks = [path for path in stored if path and os.path.isfile(path)]
 
     def _persist_custom_tracks(self):
         self.settings.set_strv("custom-tracks", self.custom_tracks)
@@ -272,7 +264,10 @@ class AudioService:
         previous = list(self.custom_tracks)
         self._load_custom_tracks()
         if previous != self.custom_tracks:
-            if self.custom_file_path and self.custom_file_path not in self.custom_tracks:
+            if (
+                self.custom_file_path
+                and self.custom_file_path not in self.custom_tracks
+            ):
                 self.stop()
                 self.select_track(0)
             self._notify_tracks_change()
@@ -309,7 +304,6 @@ class AudioService:
                 self._apply_uri()
                 self._player.set_state(Gst.State.PLAYING)
             else:
-                # Presets remain soft UI state until assets exist.
                 self._player.set_state(Gst.State.NULL)
         else:
             if self.custom_file_path:
@@ -322,7 +316,6 @@ class AudioService:
         if Gst is None:
             return
         if message.type == Gst.MessageType.EOS:
-            # Loop custom tracks while music mode stays on.
             self._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,

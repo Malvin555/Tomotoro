@@ -2,13 +2,9 @@ from gi.repository import GLib, Gtk, Pango, PangoCairo
 
 
 class MarqueeDrawingArea(Gtk.DrawingArea):
-    """Fixed-width endless marquee. Never expands the parent for long text.
-
-    Scrolls only while active (e.g. music playing). When inactive, text is
-    clipped/static at the start. Loops seamlessly with no end pause.
-    """
-
-    def __init__(self, speed_px: float = 1.0, gap_px: int = 48, step_ms: int = 30, **kwargs):
+    def __init__(
+        self, speed_px: float = 1.0, gap_px: int = 48, step_ms: int = 30, **kwargs
+    ):
         super().__init__(**kwargs)
         self.speed = speed_px
         self.gap = gap_px
@@ -23,7 +19,6 @@ class MarqueeDrawingArea(Gtk.DrawingArea):
 
         self.set_hexpand(True)
         self.set_halign(Gtk.Align.FILL)
-        # Tiny natural width so long titles cannot grow the window.
         self.set_content_width(1)
         self.set_content_height(20)
         self.set_draw_func(self._draw)
@@ -72,9 +67,7 @@ class MarqueeDrawingArea(Gtk.DrawingArea):
         return bool(self._text) and width > 1 and self._text_width > width + 2
 
     def _sync_tick(self):
-        should_run = (
-            self._active and self._needs_scroll() and self.get_mapped()
-        )
+        should_run = self._active and self._needs_scroll() and self.get_mapped()
         if should_run:
             self._ensure_tick()
         else:
@@ -134,8 +127,6 @@ class MarqueeDrawingArea(Gtk.DrawingArea):
 
 
 class MarqueeLabel:
-    """Adapter kept for existing call sites: hosts MarqueeDrawingArea in a scroll slot."""
-
     def __init__(self, scrolled_window: Gtk.ScrolledWindow, label: Gtk.Label, **kwargs):
         self.scrolled = scrolled_window
         self.label = label

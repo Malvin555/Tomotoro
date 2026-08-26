@@ -25,7 +25,7 @@ class WeeklyBarChart(Gtk.DrawingArea):
             rgba = Adw.StyleManager.get_default().get_accent_color_rgba()
             accent = (rgba.red, rgba.green, rgba.blue)
         except Exception:
-            pass  # libadwaita < 1.6 — fall back to the default tone above
+            pass
 
         padding_bottom = 22
         chart_height = height - padding_bottom

@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 
+from ..constant import MODE_FOCUS
 from .settings import SettingsService
-from .timer import MODE_FOCUS
 
 
 class AnalyticsService:

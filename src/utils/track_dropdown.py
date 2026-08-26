@@ -1,15 +1,9 @@
-from gi.repository import Gtk, GObject, Pango
+from gi.repository import GObject, Gtk, Pango
 
 from .marquee import MarqueeDrawingArea
 
 
 class TrackDropDown(Gtk.Box):
-    """Fixed-width track picker (GtkDropDown replacement).
-
-    Closed button and popup rows keep a stable width; long names ellipsize.
-    The closed label can marquee while music is playing.
-    """
-
     __gsignals__ = {
         "track-selected": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
@@ -30,7 +24,6 @@ class TrackDropDown(Gtk.Box):
         self._button.set_hexpand(True)
         self._button.set_halign(Gtk.Align.FILL)
         self._button.set_always_show_arrow(True)
-        self._button.add_css_class("flat")
         self._button.add_css_class("track-dropdown-button")
 
         self._title = MarqueeDrawingArea(speed_px=1.0, gap_px=40, step_ms=30)
@@ -38,21 +31,19 @@ class TrackDropDown(Gtk.Box):
         self._title.set_hexpand(True)
         self._title.set_valign(Gtk.Align.CENTER)
         self._title.set_content_height(18)
-        self._title.add_css_class("track-dropdown-title")
 
-        # MenuButton child must be a single widget.
         self._button.set_child(self._title)
         self.append(self._button)
 
         self._list = Gtk.ListBox()
-        self._list.set_selection_mode(Gtk.SelectionMode.NONE)
-        self._list.add_css_class("track-dropdown-list")
+        self._list.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self._list.set_activate_on_single_click(True)
         self._list.connect("row-activated", self._on_row_activated)
 
         popover = Gtk.Popover()
         popover.set_position(Gtk.PositionType.BOTTOM)
         popover.set_autohide(True)
-        popover.add_css_class("track-dropdown-popover")
+        popover.set_has_arrow(True)
 
         scroller = Gtk.ScrolledWindow()
         scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -86,11 +77,11 @@ class TrackDropDown(Gtk.Box):
         if not self._tracks:
             return
         index = max(0, min(index, len(self._tracks) - 1))
-        if index == self._selected:
-            self._update_title()
-            return
         self._selected = index
         self._update_title()
+        row = self._list.get_row_at_index(index)
+        if row is not None:
+            self._list.select_row(row)
 
     def set_marquee_active(self, active: bool):
         self._title.set_active(active)
@@ -120,8 +111,13 @@ class TrackDropDown(Gtk.Box):
 
             row = Gtk.ListBoxRow()
             row.set_child(label)
-            row._track_index = index  # noqa: SLF001
+            row._track_index = index
             self._list.append(row)
+
+        if self._tracks:
+            row = self._list.get_row_at_index(self._selected)
+            if row is not None:
+                self._list.select_row(row)
 
     def _on_row_activated(self, _list, row):
         if self._updating:

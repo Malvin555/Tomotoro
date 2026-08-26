@@ -5,11 +5,9 @@ from gi.repository import Adw, GLib, Gtk
 
 
 class LiveStatViz(Gtk.DrawingArea):
-    """Lightweight animated background for Completed / Focus Time cards."""
-
     def __init__(self, mode: str = "sessions", **kwargs):
         super().__init__(**kwargs)
-        self.mode = mode  # "sessions" | "focus"
+        self.mode = mode
         self.value = 0.0
         self.active = False
         self._phase = random.uniform(0, 2 * math.pi)
@@ -90,7 +88,6 @@ class LiveStatViz(Gtk.DrawingArea):
             self._draw_focus(cr, width, height, accent, base_alpha)
 
     def _draw_sessions(self, cr, width, height, accent, base_alpha):
-        # Soft activity bars that pulse with completed progress.
         bars = 7
         gap = 4
         bar_w = max(3.0, (width - gap * (bars - 1)) / bars)
@@ -117,13 +114,11 @@ class LiveStatViz(Gtk.DrawingArea):
             cr.fill()
 
     def _draw_focus(self, cr, width, height, accent, base_alpha):
-        # Minimal sparkline / waveform.
         if len(self._points) < 2:
             return
 
         step = width / (len(self._points) - 1)
 
-        # Fill under the line for a gentle “live data” feel.
         cr.move_to(0, height)
         cr.line_to(0, height - self._points[0] * height)
         for i, p in enumerate(self._points[1:], start=1):

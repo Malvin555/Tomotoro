@@ -2,17 +2,20 @@
 <interface>
   <requires lib="gtk" version="4.0" />
   <requires lib="Adw" version="1.0" />
+
   <template class="MaldoroWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">MalDoro</property>
-    <property name="default-width">500</property>
+    <property name="default-width">400</property>
     <property name="default-height">680</property>
-    <property name="width-request">380</property>
+    <property name="width-request">320</property>
     <property name="height-request">560</property>
+
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
             <property name="title-widget">
+              <!-- Wide / desktop: top tabs -->
               <object class="AdwViewSwitcher" id="view_switcher">
                 <property name="stack">stack</property>
                 <property name="policy">wide</property>
@@ -27,6 +30,7 @@
             </child>
           </object>
         </child>
+
         <property name="content">
           <object class="AdwViewStack" id="stack">
             <child>
@@ -51,14 +55,18 @@
             </child>
           </object>
         </property>
+
         <child type="bottom">
+          <!-- Narrow / mobile: bottom bar -->
           <object class="AdwViewSwitcherBar" id="view_switcher_bar">
             <property name="stack">stack</property>
+            <property name="reveal">False</property>
           </object>
         </child>
       </object>
     </property>
   </template>
+
   <menu id="primary_menu">
     <section>
       <item>
