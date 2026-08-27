@@ -5,9 +5,9 @@ from .analytics import AnalyticsView  # noqa: F401
 from .pomodoro import PomodoroView  # noqa: F401
 
 
-@Gtk.Template(resource_path="/org/maldoro/fyvin/window.ui")
-class MaldoroWindow(Adw.ApplicationWindow):
-    __gtype_name__ = "MaldoroWindow"
+@Gtk.Template(resource_path="/org/tomotoro/fyvin/window.ui")
+class TomotoroWindow(Adw.ApplicationWindow):
+    __gtype_name__ = "TomotoroWindow"
 
     header_bar = Gtk.Template.Child()
     stack = Gtk.Template.Child()
@@ -18,7 +18,7 @@ class MaldoroWindow(Adw.ApplicationWindow):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._window_title = Adw.WindowTitle(title="MalDoro")
+        self._window_title = Adw.WindowTitle(title="Tomotoro")
         self._setup_adaptive_navigation()
 
     def _setup_adaptive_navigation(self):

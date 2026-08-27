@@ -28,18 +28,18 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-from .view.preferences import MaldoroPreferences
-from .view.window import MaldoroWindow
+from .view.preferences import TomotoroPreferences
+from .view.window import TomotoroWindow
 
 
-class MaldoroApplication(Adw.Application):
+class TomotoroApplication(Adw.Application):
     """The main application singleton class."""
 
     def __init__(self, version=None):
         super().__init__(
-            application_id="org.maldoro.fyvin",
+            application_id="org.tomotoro.fyvin",
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
-            resource_base_path="/org/maldoro/fyvin",
+            resource_base_path="/org/tomotoro/fyvin",
         )
         self._version = version
 
@@ -58,12 +58,12 @@ class MaldoroApplication(Adw.Application):
         if not display:
             return
         theme = Gtk.IconTheme.get_for_display(display)
-        theme.add_resource_path("/org/maldoro/fyvin/icons")
+        theme.add_resource_path("/org/tomotoro/fyvin/icons")
 
     def _setup_css(self):
         provider = Gtk.CssProvider()
         try:
-            provider.load_from_resource("/org/maldoro/fyvin/style.css")
+            provider.load_from_resource("/org/tomotoro/fyvin/style.css")
             display = Gdk.Display.get_default()
             if display:
                 Gtk.StyleContext.add_provider_for_display(
@@ -80,14 +80,14 @@ class MaldoroApplication(Adw.Application):
         """
         win = self.props.active_window
         if not win:
-            win = MaldoroWindow(application=self)
+            win = TomotoroWindow(application=self)
         win.present()
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(
-            application_name="MalDoro",
-            application_icon="org.maldoro.fyvin",
+            application_name="Tomotoro",
+            application_icon="org.tomotoro.fyvin",
             version=self._version,
             developer_name="Malvin",
             developers=["Malvin"],
@@ -95,14 +95,14 @@ class MaldoroApplication(Adw.Application):
             license_type=Gtk.License.GPL_2_0,
             comments=_("A simple and focused Pomodoro timer for GNOME."),
             website="https://malvin.is-a.dev",
-            issue_url="https://gitlab.com/Malvin555/maldoro",
+            issue_url="https://gitlab.com/Malvin555/tomotoro",
         )
         about.present(self.props.active_window)
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         win = self.props.active_window
-        prefs = MaldoroPreferences()
+        prefs = TomotoroPreferences()
         prefs.present(win)
 
     def on_pomodoro_action(self, *args):
@@ -133,5 +133,5 @@ class MaldoroApplication(Adw.Application):
 def main(version):
     """The application's entry point."""
     Adw.init()
-    app = MaldoroApplication(version=version)
+    app = TomotoroApplication(version=version)
     return app.run(sys.argv)

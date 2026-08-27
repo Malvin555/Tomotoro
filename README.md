@@ -1,14 +1,14 @@
 <div align="center">
 
-# MalDoro Pomodoro 🍅
+# Tomotoro Pomodoro 🍅
 
 **Boost your productivity with custom focus sessions, break tracking, and ambient soundscapes.**
 
 <p>
-  <img src="docs/image/Image-01.png" alt="MalDoro Pomodoro Preview" width="100%">
+  <img src="docs/image/Image-01.png" alt="Tomotoro Pomodoro Preview" width="100%">
 </p>
 
-[![License](https://img.shields.io/gitlab/license/malvin555/maldoro?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/gitlab/license/malvin555/tomotoro?style=flat-square)](LICENSE)
 
 </div>
 
@@ -16,7 +16,7 @@
 
 ## 👋 What is this?
 
-Hey! **MalDoro** is a minimal, distraction-free Pomodoro timer built because I wanted something sleek that fits right into a clean desktop workflow. No bloated web wrappers, just native-feeling focus tools with built-in ambient white noise, and session analytics.
+Hey! **Tomotoro** is a minimal, distraction-free Pomodoro timer built because I wanted something sleek that fits right into a clean desktop workflow. No bloated web wrappers, just native-feeling focus tools with built-in ambient white noise, and session analytics.
 
 ---
 

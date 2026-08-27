@@ -1,6 +1,6 @@
 from gi.repository import Gio
 
-SCHEMA_ID = "org.maldoro.fyvin"
+SCHEMA_ID = "org.tomotoro.fyvin"
 
 
 class SettingsService:

@@ -1,5 +1,5 @@
 project(
-  'maldoro',
+  'tomotoro',
   version: '0.5.0 Beta',
   meson_version: '>= 1.0.0',
   default_options: [

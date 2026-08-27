@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# maldoro.in
+# tomotoro.in
 #
 # Copyright 2026 Malvin
 #
@@ -32,17 +32,17 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('maldoro', localedir)
-locale.textdomain('maldoro')
-gettext.bindtextdomain('maldoro', localedir)
-gettext.textdomain('maldoro')
+locale.bindtextdomain('tomotoro', localedir)
+locale.textdomain('tomotoro')
+gettext.bindtextdomain('tomotoro', localedir)
+gettext.textdomain('tomotoro')
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'maldoro.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'tomotoro.gresource'))
     resource._register()
 
-    from maldoro import main
+    from tomotoro import main
     sys.exit(main.main(VERSION))

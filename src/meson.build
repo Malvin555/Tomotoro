@@ -1,9 +1,9 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'maldoro'
+moduledir = pkgdatadir / 'tomotoro'
 gnome = import('gnome')
 
-# gnome.compile_resources('maldoro',
-#   'maldoro.gresource.xml',
+# gnome.compile_resources('tomotoro',
+#   'tomotoro.gresource.xml',
 #   gresource_bundle: true,
 #   install: true,
 #   install_dir: pkgdatadir,
@@ -18,8 +18,8 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'maldoro.in',
-  output: 'maldoro',
+  input: 'tomotoro.in',
+  output: 'tomotoro',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),

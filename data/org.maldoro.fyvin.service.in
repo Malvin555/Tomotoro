@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.maldoro.fyvin
-Exec=@bindir@/maldoro --gapplication-service

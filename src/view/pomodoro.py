@@ -12,7 +12,7 @@ from ..utils.track_dropdown import TrackDropDown
 from .helpers import ModeSwitcher, MusicSessionGate
 
 
-@Gtk.Template(resource_path="/org/maldoro/fyvin/pomodoro.ui")
+@Gtk.Template(resource_path="/org/tomotoro/fyvin/pomodoro.ui")
 class PomodoroView(Gtk.Box):
     __gtype_name__ = "PomodoroView"
 

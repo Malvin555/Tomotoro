@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=MalDoro
-Exec=maldoro
-Icon=org.maldoro.fyvin
+Name=Tomotoro
+Exec=tomotoro
+Icon=org.tomotoro.fyvin
 Terminal=false
 Type=Application
 Categories=Utility;

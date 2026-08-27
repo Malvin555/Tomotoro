@@ -47,7 +47,7 @@
                         </style>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">maldoro-timer-symbolic</property>
+                            <property name="icon-name">tomotoro-timer-symbolic</property>
                             <property name="pixel-size">24</property>
                           </object>
                         </child>
@@ -143,7 +143,7 @@
                             <property name="spacing">8</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">maldoro-streak-symbolic</property>
+                                <property name="icon-name">tomotoro-streak-symbolic</property>
                                 <property name="pixel-size">16</property>
                                 <style><class name="dim-label" /></style>
                               </object>
@@ -178,7 +178,7 @@
                             <property name="spacing">8</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">maldoro-music-symbolic</property>
+                                <property name="icon-name">tomotoro-music-symbolic</property>
                                 <property name="pixel-size">16</property>
                                 <style><class name="dim-label" /></style>
                               </object>

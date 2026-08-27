@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+  <gresource prefix="/org/tomotoro/fyvin">
+    <file preprocess="xml-stripblanks" alias="window.ui">ui/window.ui</file>
+    <file preprocess="xml-stripblanks" alias="pomodoro.ui">ui/pages/pomodoro.ui</file>
+    <file preprocess="xml-stripblanks" alias="preferences.ui">ui/pages/preferences.ui</file>
+    <file preprocess="xml-stripblanks" alias="analytics.ui">ui/pages/analytics.ui</file>
+    <file alias="style.css">style.css</file>
+  </gresource>
+  <gresource prefix="/org/tomotoro/fyvin/icons">
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-timer-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-timer-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-analytics-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-analytics-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-music-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-music-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-preferences-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-preferences-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-streak-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-streak-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-completed-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-completed-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-skip-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-skip-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-music-add-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-music-add-symbolic.svg</file>
+  </gresource>
+</gresources>

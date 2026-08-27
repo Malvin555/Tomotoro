@@ -5,9 +5,9 @@ from ..services.settings import SettingsService
 from ..utils.formatters import track_display_name
 
 
-@Gtk.Template(resource_path="/org/maldoro/fyvin/preferences.ui")
-class MaldoroPreferences(Adw.PreferencesDialog):
-    __gtype_name__ = "MaldoroPreferences"
+@Gtk.Template(resource_path="/org/tomotoro/fyvin/preferences.ui")
+class TomotoroPreferences(Adw.PreferencesDialog):
+    __gtype_name__ = "TomotoroPreferences"
 
     focus_length_row = Gtk.Template.Child()
     short_break_row = Gtk.Template.Child()
@@ -68,7 +68,16 @@ class MaldoroPreferences(Adw.PreferencesDialog):
     def _audio_filter(self) -> Gtk.FileFilter:
         audio_filter = Gtk.FileFilter()
         audio_filter.set_name("Audio Files")
-        for pattern in ("*.mp3", "*.ogg", "*.oga", "*.opus", "*.flac", "*.wav", "*.m4a", "*.aac"):
+        for pattern in (
+            "*.mp3",
+            "*.ogg",
+            "*.oga",
+            "*.opus",
+            "*.flac",
+            "*.wav",
+            "*.m4a",
+            "*.aac",
+        ):
             audio_filter.add_pattern(pattern)
         audio_filter.add_mime_type("audio/*")
         return audio_filter
@@ -166,9 +175,7 @@ class MaldoroPreferences(Adw.PreferencesDialog):
             )
             remove_button.add_css_class("flat")
             remove_button.add_css_class("circular")
-            remove_button.connect(
-                "clicked", self._on_remove_track, path
-            )
+            remove_button.connect("clicked", self._on_remove_track, path)
             row.add_suffix(remove_button)
             self.custom_tracks_group.add(row)
             self._track_rows.append(row)

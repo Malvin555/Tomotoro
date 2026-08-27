@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'org.maldoro.fyvin.desktop.in',
-  output: 'org.maldoro.fyvin.desktop',
+  input: 'org.tomotoro.fyvin.desktop.in',
+  output: 'org.tomotoro.fyvin.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,
@@ -13,8 +13,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-  input: 'org.maldoro.fyvin.metainfo.xml.in',
-  output: 'org.maldoro.fyvin.metainfo.xml',
+  input: 'org.tomotoro.fyvin.metainfo.xml.in',
+  output: 'org.tomotoro.fyvin.metainfo.xml',
   po_dir: '../po',
   install: true,
   install_dir: get_option('datadir') / 'metainfo',
@@ -28,7 +28,7 @@ test(
 )
 
 install_data(
-  'org.maldoro.fyvin.gschema.xml',
+  'org.tomotoro.fyvin.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas',
 )
 
@@ -42,15 +42,15 @@ test(
 service_conf = configuration_data()
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
 configure_file(
-  input: 'org.maldoro.fyvin.service.in',
-  output: 'org.maldoro.fyvin.service',
+  input: 'org.tomotoro.fyvin.service.in',
+  output: 'org.tomotoro.fyvin.service',
   configuration: service_conf,
   install_dir: get_option('datadir') / 'dbus-1' / 'services',
 )
 
 gnome.compile_resources(
-  'maldoro',
-  'maldoro.gresource.xml',
+  'tomotoro',
+  'tomotoro.gresource.xml',
   gresource_bundle: true,
   source_dir: '.',
   install: true,

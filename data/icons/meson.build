@@ -1,4 +1,4 @@
-application_id = 'org.maldoro.fyvin'
+application_id = 'org.tomotoro.fyvin'
 
 foreach size : ['16x16', '32x32', '48x48', '64x64', '128x128']
   install_data(

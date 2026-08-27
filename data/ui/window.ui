@@ -2,8 +2,8 @@
 <interface>
   <requires lib="gtk" version="4.0" />
   <requires lib="Adw" version="1.0" />
-  <template class="MaldoroWindow" parent="AdwApplicationWindow">
-    <property name="title" translatable="yes">MalDoro</property>
+  <template class="TomotoroWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="yes">Tomotoro</property>
     <property name="default-width">500</property>
     <property name="default-height">680</property>
     <property name="width-request">380</property>
@@ -33,7 +33,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">pomodoro</property>
                 <property name="title" translatable="yes">Timer</property>
-                <property name="icon-name">maldoro-timer-symbolic</property>
+                <property name="icon-name">tomotoro-timer-symbolic</property>
                 <property name="child">
                   <object class="PomodoroView" id="pomodoro_view" />
                 </property>
@@ -43,7 +43,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">analytics</property>
                 <property name="title" translatable="yes">Analytics</property>
-                <property name="icon-name">maldoro-analytics-symbolic</property>
+                <property name="icon-name">tomotoro-analytics-symbolic</property>
                 <property name="child">
                   <object class="AnalyticsView" id="analytics_view" />
                 </property>
@@ -66,7 +66,7 @@
         <attribute name="action">app.preferences</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_About MalDoro</attribute>
+        <attribute name="label" translatable="yes">_About Tomotoro</attribute>
         <attribute name="action">app.about</attribute>
       </item>
     </section>

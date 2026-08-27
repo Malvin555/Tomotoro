@@ -276,7 +276,7 @@ class AudioService:
         if not self._ensure_gst():
             return
         Gst = self._Gst
-        self._player = Gst.ElementFactory.make("playbin", "maldoro-player")
+        self._player = Gst.ElementFactory.make("playbin", "tomotoro-player")
         if self._player is None:
             return
         self._player.set_property("volume", self.volume)

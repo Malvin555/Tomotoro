@@ -62,7 +62,7 @@ class WeeklyBarChart(Gtk.DrawingArea):
             cr.show_text(label)
 
 
-@Gtk.Template(resource_path="/org/maldoro/fyvin/analytics.ui")
+@Gtk.Template(resource_path="/org/tomotoro/fyvin/analytics.ui")
 class AnalyticsView(Gtk.Box):
     __gtype_name__ = "AnalyticsView"
 

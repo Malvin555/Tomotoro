@@ -1,1 +1,1 @@
-i18n.gettext('maldoro', preset: 'glib')
+i18n.gettext('tomotoro', preset: 'glib')

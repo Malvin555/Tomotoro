@@ -1,9 +1,9 @@
 {
-  "id": "org.maldoro.fyvin",
+  "id": "org.tomotoro.fyvin",
   "runtime": "org.gnome.Platform",
   "runtime-version": "48",
   "sdk": "org.gnome.Sdk",
-  "command": "maldoro",
+  "command": "tomotoro",
   "finish-args": [
     "--share=network",
     "--share=ipc",
@@ -27,7 +27,7 @@
   ],
   "modules": [
     {
-      "name": "maldoro",
+      "name": "tomotoro",
       "builddir": true,
       "buildsystem": "meson",
       "sources": [

@@ -155,7 +155,7 @@
 
                         <child>
                           <object class="GtkButton" id="skip_button">
-                            <property name="icon-name">maldoro-skip-symbolic</property>
+                            <property name="icon-name">tomotoro-skip-symbolic</property>
                             <property name="tooltip-text" translatable="yes">Skip</property>
                             <property name="width-request">40</property>
                             <property name="height-request">40</property>
@@ -189,7 +189,7 @@
 
                             <child>
                                   <object class="GtkImage">
-                                    <property name="icon-name">maldoro-music-symbolic</property>
+                                    <property name="icon-name">tomotoro-music-symbolic</property>
                                     <property name="pixel-size">20</property>
                                     <property name="valign">start</property>
                                     <property name="margin-top">2</property>
@@ -284,7 +284,7 @@
 
                             <child>
                               <object class="GtkButton" id="music_file_button">
-                                <property name="icon-name">maldoro-music-add-symbolic</property>
+                                <property name="icon-name">tomotoro-music-add-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Add local audio file</property>
                                 <style>
                                   <class name="circular" />
@@ -372,7 +372,7 @@
                                 <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkImage">
-                                    <property name="icon-name">maldoro-completed-symbolic</property>
+                                    <property name="icon-name">tomotoro-completed-symbolic</property>
                                     <property name="pixel-size">16</property>
                                     <style>
                                       <class name="dim-label" />
@@ -424,7 +424,7 @@
                                 <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkImage">
-                                    <property name="icon-name">maldoro-timer-symbolic</property>
+                                    <property name="icon-name">tomotoro-timer-symbolic</property>
                                     <property name="pixel-size">16</property>
                                     <style>
                                       <class name="dim-label" />
