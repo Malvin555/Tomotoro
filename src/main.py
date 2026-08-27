@@ -88,11 +88,14 @@ class MaldoroApplication(Adw.Application):
         about = Adw.AboutDialog(
             application_name="MalDoro",
             application_icon="org.maldoro.fyvin",
-            developer_name="Malvin",
             version=self._version,
-            translator_credits=_("translator-credits"),
+            developer_name="Malvin",
             developers=["Malvin"],
             copyright="© 2026 Malvin",
+            license_type=Gtk.License.GPL_2_0,
+            comments=_("A simple and focused Pomodoro timer for GNOME."),
+            website="https://malvin.is-a.dev",
+            issue_url="https://gitlab.com/Malvin555/maldoro",
         )
         about.present(self.props.active_window)
 

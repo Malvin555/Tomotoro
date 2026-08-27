@@ -24,7 +24,6 @@
     color: @card_fg_color;
 }
 
-/* Status Chip */
 .status-chip {
     padding: 3px 12px;
     border-radius: 9999px;
@@ -215,6 +214,7 @@
     border-radius: 20px;
     background-color: alpha(currentColor, 0.05);
     padding: 18px 20px;
+    box-shadow: none;
 }
 .analytics-hero-badge {
     border-radius: 9999px;
@@ -237,4 +237,5 @@
     border-radius: 20px;
     background-color: alpha(currentColor, 0.05);
     padding: 18px 20px;
+    box-shadow: none;
 }

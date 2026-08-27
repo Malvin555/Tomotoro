@@ -1,15 +1,15 @@
 application_id = 'org.maldoro.fyvin'
 
-scalable_dir = 'hicolor' / 'scalable' / 'apps'
-install_data(
-  scalable_dir / ('@0@.svg').format(application_id),
-  install_dir: get_option('datadir') / 'icons' / scalable_dir,
-)
+foreach size : ['16x16', '32x32', '48x48', '64x64', '128x128']
+  install_data(
+    'hicolor' / size / 'apps' / ('@0@.png').format(application_id),
+    install_dir: get_option('datadir') / 'icons' / 'hicolor' / size / 'apps',
+  )
+endforeach
 
-symbolic_dir = 'hicolor' / 'symbolic' / 'apps'
 install_data(
-  symbolic_dir / ('@0@-symbolic.svg').format(application_id),
-  install_dir: get_option('datadir') / 'icons' / symbolic_dir,
+  'hicolor' / 'symbolic' / 'apps' / ('@0@-symbolic.png').format(application_id),
+  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'symbolic' / 'apps',
 )
 
 install_subdir(

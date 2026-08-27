@@ -1,6 +1,6 @@
 project(
   'maldoro',
-  version: '00.1.02',
+  version: '0.5.0 Beta',
   meson_version: '>= 1.0.0',
   default_options: [
     'warning_level=2',
