@@ -8,7 +8,7 @@
   <img src="docs/image/Image-01.png" alt="Tomotoro Pomodoro Preview" width="100%">
 </p>
 
-[![License](https://img.shields.io/gitlab/license/malvin555/tomotoro?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/gitlab/license/malvin555/maldoro?style=flat-square)](LICENSE)
 
 </div>
 
