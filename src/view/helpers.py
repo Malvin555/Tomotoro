@@ -1,46 +1,53 @@
 from gi.repository import Gtk
 
-from ..constant import MODE_FOCUS, MODE_LONG, MODE_SHORT
+from ..constant import MODE_BREAK, MODE_FOCUS
 
-MODE_LOCK_TOOLTIP = ()
+MODE_LOCK_TOOLTIP = "Pause the timer before changing mode"
 
 
 class ModeSwitcher:
     def __init__(
         self,
         focus_toggle: Gtk.ToggleButton,
-        short_toggle: Gtk.ToggleButton,
-        long_toggle: Gtk.ToggleButton,
+        break_toggle: Gtk.ToggleButton,
         on_mode_chosen,
     ):
         self.focus = focus_toggle
-        self.short = short_toggle
-        self.long = long_toggle
+        self.break_mode = break_toggle
         self._on_mode_chosen = on_mode_chosen
         self._locked = False
 
         self.focus.connect("toggled", self._on_toggled, MODE_FOCUS)
-        self.short.connect("toggled", self._on_toggled, MODE_SHORT)
-        self.long.connect("toggled", self._on_toggled, MODE_LONG)
+        self.break_mode.connect("toggled", self._on_toggled, MODE_BREAK)
 
     def _buttons(self):
-        return (self.focus, self.short, self.long)
+        return (
+            self.focus,
+            self.break_mode,
+        )
 
     def sync(self, mode: str):
         self.focus.set_active(mode == MODE_FOCUS)
-        self.short.set_active(mode == MODE_SHORT)
-        self.long.set_active(mode == MODE_LONG)
+        self.break_mode.set_active(mode == MODE_BREAK)
 
     def set_locked(self, locked: bool):
         self._locked = bool(locked)
-        tooltip = MODE_LOCK_TOOLTIP if self._locked else None
+
         for button in self._buttons():
             button.set_sensitive(not self._locked)
-            button.set_tooltip_text(tooltip)
+
+        if self._locked:
+            self.focus.set_tooltip_text(MODE_LOCK_TOOLTIP)
+            self.break_mode.set_tooltip_text(MODE_LOCK_TOOLTIP)
+        else:
+            self.focus.set_tooltip_text(None)
+            self.break_mode.set_tooltip_text(None)
 
     def _on_toggled(self, button, mode):
         if self._locked:
+            self.sync(MODE_FOCUS if self.focus.get_active() else MODE_BREAK)
             return
+
         if button.get_active():
             self._on_mode_chosen(mode)
 
@@ -61,13 +68,26 @@ class MusicSessionGate:
         self.audio = audio_service
 
     def refresh(self, running: bool, is_playing: bool):
-        self.controls.set_sensitive(running)
-        self.switch.set_sensitive(running)
+        enabled = self.switch.get_active()
 
-        if not running and self.audio.is_playing:
-            self.audio.stop()
+        # The music switch itself is always available
+        self.switch.set_sensitive(True)
+
+        # All music controls depend on the music switch
+        self.controls.set_sensitive(enabled)
+        self.track_dropdown.set_sensitive(enabled)
+
+        # Turning music off pauses playback
+        if not enabled and self.audio.is_playing:
+            self.audio.pause()
             is_playing = False
 
-        playing = running and is_playing
+        # Timer stopping also pauses playback
+        if not running and self.audio.is_playing:
+            self.audio.pause()
+            is_playing = False
+
+        playing = running and enabled and is_playing
+
         self.title_marquee.set_active(playing)
         self.track_dropdown.set_marquee_active(playing)

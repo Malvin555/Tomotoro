@@ -17,9 +17,7 @@ class SettingsService:
         self._listeners = []
         self._fallback = {
             "focus-length": 25,
-            "short-break-length": 5,
-            "long-break-length": 15,
-            "sessions-until-long-break": 4,
+            "break-length": 5,
             "auto-start-breaks": False,
             "auto-start-focus": False,
             "sound-enabled": True,
@@ -109,14 +107,14 @@ class SettingsService:
     def get_focus_length(self) -> int:
         return self.get_int("focus-length", 25)
 
-    def get_short_break_length(self) -> int:
-        return self.get_int("short-break-length", 5)
+    def get_break_length(self) -> int:
+        return self.get_int("break-length", 5)
 
-    def get_long_break_length(self) -> int:
-        return self.get_int("long-break-length", 15)
+    def is_auto_start_breaks(self) -> bool:
+        return self.get_boolean("auto-start-breaks", False)
 
-    def get_sessions_before_long_break(self) -> int:
-        return self.get_int("sessions-until-long-break", 4)
+    def is_auto_start_focus(self) -> bool:
+        return self.get_boolean("auto-start-focus", False)
 
     def is_sound_enabled(self) -> bool:
         return self.get_boolean("sound-enabled", True)

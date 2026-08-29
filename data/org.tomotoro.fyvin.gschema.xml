@@ -6,20 +6,10 @@
 			<summary>Focus length in minutes</summary>
 			<description>Duration of a focus session in minutes.</description>
 		</key>
-		<key name="short-break-length" type="i">
+		<key name="break-length" type="i">
 			<default>5</default>
-			<summary>Short break length in minutes</summary>
-			<description>Duration of a short break in minutes.</description>
-		</key>
-		<key name="long-break-length" type="i">
-			<default>15</default>
-			<summary>Long break length in minutes</summary>
-			<description>Duration of a long break in minutes.</description>
-		</key>
-		<key name="sessions-until-long-break" type="i">
-			<default>4</default>
-			<summary>Sessions before long break</summary>
-			<description>Number of focus sessions before a long break.</description>
+			<summary>Break length in minutes</summary>
+			<description>Duration of a break session in minutes.</description>
 		</key>
 		<key name="auto-start-breaks" type="b">
 			<default>false</default>

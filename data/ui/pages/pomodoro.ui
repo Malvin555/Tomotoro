@@ -32,30 +32,27 @@
                       <object class="GtkBox">
                         <property name="halign">center</property>
                         <property name="spacing">4</property>
+
                         <style>
                           <class name="mode-switcher" />
                           <class name="linked" />
                         </style>
+
                         <child>
                           <object class="GtkToggleButton" id="mode_focus_toggle">
                             <property name="label" translatable="yes">Focus</property>
                             <property name="active">True</property>
                           </object>
                         </child>
+
                         <child>
-                          <object class="GtkToggleButton" id="mode_short_toggle">
-                            <property name="label" translatable="yes">Short</property>
-                            <property name="tooltip-text" translatable="yes">Short Break</property>
+                          <object class="GtkToggleButton" id="mode_break_toggle">
+                            <property name="label" translatable="yes">Break</property>
+                            <property name="tooltip-text" translatable="yes">Break</property>
                             <property name="group">mode_focus_toggle</property>
                           </object>
                         </child>
-                        <child>
-                          <object class="GtkToggleButton" id="mode_long_toggle">
-                            <property name="label" translatable="yes">Long</property>
-                            <property name="tooltip-text" translatable="yes">Long Break</property>
-                            <property name="group">mode_focus_toggle</property>
-                          </object>
-                        </child>
+
                       </object>
                     </child>
 

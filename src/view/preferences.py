@@ -10,9 +10,7 @@ class TomotoroPreferences(Adw.PreferencesDialog):
     __gtype_name__ = "TomotoroPreferences"
 
     focus_length_row = Gtk.Template.Child()
-    short_break_row = Gtk.Template.Child()
-    long_break_row = Gtk.Template.Child()
-    sessions_row = Gtk.Template.Child()
+    break_length_row = Gtk.Template.Child()
     auto_start_breaks_row = Gtk.Template.Child()
     auto_start_focus_row = Gtk.Template.Child()
     sound_row = Gtk.Template.Child()
@@ -33,21 +31,35 @@ class TomotoroPreferences(Adw.PreferencesDialog):
         self._rebuild_track_list()
 
     def _bind_settings(self):
-        self.settings_service.bind("focus-length", self.focus_length_row, "value")
-        self.settings_service.bind("short-break-length", self.short_break_row, "value")
-        self.settings_service.bind("long-break-length", self.long_break_row, "value")
         self.settings_service.bind(
-            "sessions-until-long-break", self.sessions_row, "value"
+            "focus-length",
+            self.focus_length_row,
+            "value",
         )
         self.settings_service.bind(
-            "auto-start-breaks", self.auto_start_breaks_row, "active"
+            "break-length",
+            self.break_length_row,
+            "value",
         )
         self.settings_service.bind(
-            "auto-start-focus", self.auto_start_focus_row, "active"
+            "auto-start-breaks",
+            self.auto_start_breaks_row,
+            "active",
         )
-        self.settings_service.bind("sound-enabled", self.sound_row, "active")
         self.settings_service.bind(
-            "play-music-with-timer", self.play_with_timer_row, "active"
+            "auto-start-focus",
+            self.auto_start_focus_row,
+            "active",
+        )
+        self.settings_service.bind(
+            "sound-enabled",
+            self.sound_row,
+            "active",
+        )
+        self.settings_service.bind(
+            "play-music-with-timer",
+            self.play_with_timer_row,
+            "active",
         )
 
     def _setup_music_page(self):

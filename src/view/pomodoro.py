@@ -1,6 +1,6 @@
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-from ..constant import MODE_FOCUS, MODE_TITLES
+from ..constant import MODE_BREAK, MODE_FOCUS, MODE_TITLES
 from ..services.analytics import AnalyticsService
 from ..services.audio import AudioService
 from ..services.settings import SettingsService
@@ -18,8 +18,7 @@ class PomodoroView(Gtk.Box):
 
     toast_overlay = Gtk.Template.Child()
     mode_focus_toggle = Gtk.Template.Child()
-    mode_short_toggle = Gtk.Template.Child()
-    mode_long_toggle = Gtk.Template.Child()
+    mode_break_toggle = Gtk.Template.Child()
     status_label = Gtk.Template.Child()
     timer_label = Gtk.Template.Child()
     progress_bar = Gtk.Template.Child()
@@ -61,8 +60,7 @@ class PomodoroView(Gtk.Box):
 
         self.mode_switcher = ModeSwitcher(
             self.mode_focus_toggle,
-            self.mode_short_toggle,
-            self.mode_long_toggle,
+            self.mode_break_toggle,
             on_mode_chosen=self.timer.set_mode,
         )
         self.music_gate = MusicSessionGate(
@@ -109,6 +107,7 @@ class PomodoroView(Gtk.Box):
         self._update_status_label()
         self._update_stats()
         self.mode_switcher.set_locked(self.timer.running)
+        self.skip_button.set_sensitive(self.timer.running)
         self.music_gate.refresh(self.timer.running, self.audio.is_playing)
 
     def _on_timer_tick(self, seconds_left, total_seconds, fraction):
@@ -122,11 +121,14 @@ class PomodoroView(Gtk.Box):
     ):
         self.timer_label.set_label(format_time(seconds_left))
         self.progress_bar.set_fraction(fraction)
-        self.start_button.set_label("Pause" if running else "Start")
+        self.start_button.set_label(
+            "Pause" if running else "Reset" if self.timer.completed else "Start"
+        )
         self.mode_switcher.sync(mode)
         self._update_status_label()
         self._update_stats()
         self.mode_switcher.set_locked(running)
+        self.skip_button.set_sensitive(running)
         self._sync_music_with_timer(running)
         self.music_gate.refresh(running, self.audio.is_playing)
 
@@ -159,32 +161,38 @@ class PomodoroView(Gtk.Box):
 
     def _sync_music_with_timer(self, running: bool):
         if running and not self._was_running:
-            if self.settings.is_play_music_with_timer():
-                if not self.music_switch.get_active():
-                    self.music_switch.set_active(True)
+            if (
+                self.music_switch.get_active()
+                and self.settings.is_play_music_with_timer()
+            ):
                 self.audio.play()
+
         elif not running and self._was_running:
-            self.audio.stop()
+            self.audio.pause()
+
         self._was_running = running
 
     def _on_music_switch_toggled(self, switch, _pspec):
-        if not self.timer.running:
-            if switch.get_active():
-                switch.set_active(False)
-            self.music_gate.refresh(False, False)
-            return
-        if not switch.get_active():
-            self.audio.stop()
-        self.music_gate.refresh(True, self.audio.is_playing)
+        enabled = switch.get_active()
+
+        if not enabled:
+            self.audio.pause()
+
+        self.music_gate.refresh(
+            self.timer.running,
+            self.audio.is_playing,
+        )
 
     def _on_music_play_clicked(self, _button):
+        if not self.music_switch.get_active():
+            return
+
         if not self.timer.running:
             toast = Adw.Toast.new("Start a Pomodoro session to play music")
             toast.set_timeout(2)
             self.toast_overlay.add_toast(toast)
             return
-        if not self.music_switch.get_active():
-            self.music_switch.set_active(True)
+
         self.audio.toggle()
 
     def _on_track_selected(self, _picker, index: int):

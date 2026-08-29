@@ -28,45 +28,16 @@
                 </property>
               </object>
             </child>
-
             <child>
-              <object class="AdwSpinRow" id="short_break_row">
-                <property name="title" translatable="yes">Short Break</property>
-                <property name="subtitle" translatable="yes">Minutes per short break</property>
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">1</property>
-                    <property name="upper">60</property>
-                    <property name="value">5</property>
-                    <property name="step-increment">1</property>
-                  </object>
-                </property>
-              </object>
-            </child>
+              <object class="AdwSpinRow" id="break_length_row">
+                <property name="title" translatable="yes">Break Length</property>
+                <property name="subtitle" translatable="yes">Minutes per break session</property>
 
-            <child>
-              <object class="AdwSpinRow" id="long_break_row">
-                <property name="title" translatable="yes">Long Break</property>
-                <property name="subtitle" translatable="yes">Minutes per long break</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">1</property>
                     <property name="upper">90</property>
-                    <property name="value">15</property>
-                    <property name="step-increment">1</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwSpinRow" id="sessions_row">
-                <property name="title" translatable="yes">Sessions Before Long Break</property>
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">1</property>
-                    <property name="upper">12</property>
-                    <property name="value">4</property>
+                    <property name="value">5</property>
                     <property name="step-increment">1</property>
                   </object>
                 </property>
