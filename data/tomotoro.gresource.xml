@@ -40,5 +40,9 @@
             preprocess="xml-stripblanks"
             alias="scalable/actions/tomotoro-music-add-symbolic.svg"
         >icons/hicolor/symbolic/actions/tomotoro-music-add-symbolic.svg</file>
+    <file
+            preprocess="xml-stripblanks"
+            alias="scalable/actions/tomotoro-track-symbolic.svg"
+        >icons/hicolor/symbolic/actions/tomotoro-track-symbolic.svg</file>
   </gresource>
 </gresources>

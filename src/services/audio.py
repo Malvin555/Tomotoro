@@ -1,11 +1,17 @@
 import os
+import re
 
 from gi.repository import GLib
 
-from ..utils.formatters import collect_audio_files, track_display_name
+from ..utils.formatters import (
+    SUPPORTED_AUDIO_EXTENSIONS,
+    collect_audio_files,
+    is_supported_audio,
+    track_display_name,
+)
 from .settings import SettingsService
 
-PRESET_TRACKS = [
+DEFAULT_PRESET_TRACKS = [
     "Lo-fi Beats",
     "Rain Sounds",
     "White Noise",
@@ -45,22 +51,97 @@ class AudioService:
 
     def __init__(self):
         self.settings = SettingsService.get_default()
-        self.preset_tracks = list(PRESET_TRACKS)
+        self.preset_tracks = list(DEFAULT_PRESET_TRACKS)
         self.custom_tracks = []
         self.current_index = 0
         self.current_track_name = self.preset_tracks[0]
         self.custom_file_path = None
         self.is_playing = False
-        self.volume = 0.6
+        self.volume = 1.0
         self.on_state_change_callbacks = []
         self.on_tracks_change_callbacks = []
         self._player = None
         self._bus_watch_id = None
 
+        self._refresh_preset_tracks()
         self._load_custom_tracks()
         self._restore_selection()
         self._init_player()
         self.settings.add_listener(self._on_settings_changed)
+
+    def _get_preset_search_dirs(self) -> list:
+        dirs = []
+        custom_env = os.environ.get("TOMOTORO_SOUNDS_DIR") or os.environ.get(
+            "MALDORO_SOUNDS_DIR"
+        )
+        if custom_env and os.path.isdir(custom_env):
+            dirs.append(custom_env)
+
+        try:
+            src_dir = os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            )
+            dev_sounds = os.path.join(src_dir, "data", "sounds")
+            if os.path.isdir(dev_sounds):
+                dirs.append(dev_sounds)
+        except Exception:
+            pass
+
+        user_data = GLib.get_user_data_dir()
+        for app_name in ("tomotoro", "maldoro"):
+            user_sounds = os.path.join(user_data, app_name, "sounds")
+            if os.path.isdir(user_sounds):
+                dirs.append(user_sounds)
+
+        for system_data in GLib.get_system_data_dirs():
+            for app_name in ("tomotoro", "maldoro"):
+                sys_sounds = os.path.join(system_data, app_name, "sounds")
+                if os.path.isdir(sys_sounds):
+                    dirs.append(sys_sounds)
+
+        return dirs
+
+    def _refresh_preset_tracks(self):
+        """Scans preset directories and augments preset track list with any found tracks."""
+        found_presets = list(DEFAULT_PRESET_TRACKS)
+        seen_names = {t.lower() for t in found_presets}
+
+        for search_dir in self._get_preset_search_dirs():
+            try:
+                for file_name in sorted(os.listdir(search_dir)):
+                    full_path = os.path.join(search_dir, file_name)
+                    if is_supported_audio(full_path):
+                        display = track_display_name(full_path)
+                        if display.lower() not in seen_names:
+                            found_presets.append(display)
+                            seen_names.add(display.lower())
+            except Exception:
+                continue
+
+        self.preset_tracks = found_presets
+
+    def _normalize_name(self, name: str) -> str:
+        return re.sub(r"[^a-zA-Z0-9]", "", name or "").lower()
+
+    def _find_preset_file(self, track_name: str) -> str:
+        if not track_name:
+            return None
+
+        norm_target = self._normalize_name(track_name)
+        search_dirs = self._get_preset_search_dirs()
+
+        for search_dir in search_dirs:
+            try:
+                for file_name in os.listdir(search_dir):
+                    full_path = os.path.join(search_dir, file_name)
+                    if not is_supported_audio(full_path):
+                        continue
+                    stem, _ = os.path.splitext(file_name)
+                    if self._normalize_name(stem) == norm_target:
+                        return full_path
+            except Exception:
+                continue
+        return None
 
     def get_track_list(self) -> list:
         tracks = list(self.preset_tracks)
@@ -113,12 +194,8 @@ class AudioService:
         self._persist_custom_tracks()
 
         if was_current:
-            playing = self.is_playing
             self.stop()
             self.select_track(0)
-            if playing and self.custom_file_path is None:
-                # Stay stopped after removing the active custom track.
-                pass
 
         self._notify_tracks_change()
         self._notify_state_change()
@@ -127,10 +204,10 @@ class AudioService:
     def clear_custom_tracks(self):
         if not self.custom_tracks:
             return
-        playing = self.is_playing and self.custom_file_path
+        was_custom = bool(self.custom_file_path)
         self.custom_tracks = []
         self._persist_custom_tracks()
-        if playing:
+        if was_custom:
             self.stop()
             self.select_track(0)
         self._notify_tracks_change()
@@ -166,7 +243,6 @@ class AudioService:
             self.select_track(index)
 
     def set_custom_file(self, file_path: str):
-        """Legacy helper: add one file and select it."""
         if not file_path:
             return
         added_or_existing = collect_audio_files([file_path])
@@ -256,7 +332,8 @@ class AudioService:
                 return
         self.custom_file_path = None
         self.current_index = 0
-        self.current_track_name = self.preset_tracks[0]
+        if self.preset_tracks:
+            self.current_track_name = self.preset_tracks[0]
 
     def _on_settings_changed(self, key):
         if key != "custom-tracks":
@@ -285,28 +362,39 @@ class AudioService:
         self._bus_watch_id = bus.connect("message", self._on_bus_message)
         self._apply_uri()
 
+    def _get_active_uri(self):
+        if self.custom_file_path and os.path.isfile(self.custom_file_path):
+            return GLib.filename_to_uri(self.custom_file_path, None)
+
+        preset_file = self._find_preset_file(self.current_track_name)
+        if preset_file and os.path.isfile(preset_file):
+            return GLib.filename_to_uri(preset_file, None)
+
+        return None
+
     def _apply_uri(self):
         if self._player is None or self._Gst is None:
             return
         Gst = self._Gst
         self._player.set_state(Gst.State.NULL)
-        if self.custom_file_path and os.path.isfile(self.custom_file_path):
-            uri = GLib.filename_to_uri(self.custom_file_path, None)
+        uri = self._get_active_uri()
+        if uri:
             self._player.set_property("uri", uri)
 
     def _set_playing(self, playing: bool):
         self.is_playing = playing
-        if self._player is None:
+        if self._player is None or self._Gst is None:
             return
         Gst = self._Gst
         if playing:
-            if self.custom_file_path:
+            uri = self._get_active_uri()
+            if uri:
                 self._apply_uri()
                 self._player.set_state(Gst.State.PLAYING)
             else:
                 self._player.set_state(Gst.State.NULL)
         else:
-            if self.custom_file_path:
+            if self._get_active_uri():
                 self._player.set_state(Gst.State.PAUSED)
             else:
                 self._player.set_state(Gst.State.NULL)

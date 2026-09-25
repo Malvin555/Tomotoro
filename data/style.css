@@ -119,6 +119,7 @@
     background-color: alpha(currentColor, 0.05);
     box-shadow: none;
     padding: 14px 16px;
+    transition: background-color 180ms ease;
 }
 
 .ambient-card .heading {
@@ -130,7 +131,8 @@
 .title-text-col,
 .title-scroll,
 .music-controls,
-.track-dropdown {
+.track-dropdown,
+.track-dropdown-button {
     min-width: 0;
 }
 
@@ -149,46 +151,75 @@
 
 .title-marquee {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .track-dropdown {
     min-width: 0;
 }
 
-.track-dropdown-button {
+/*.track-dropdown-button {
     min-width: 0;
-    padding-left: 8px;
-    padding-right: 6px;
-}
+    min-height: 34px;
+    padding: 4px 10px;
+    border-radius: 9px;
+    background-color: alpha(currentColor, 0.05);
+    border: 1px solid alpha(currentColor, 0.04);
+    transition: all 180ms ease;
+}*/
 
-.track-dropdown-title {
-    min-width: 0;
+.track-dropdown-button:hover {
+    background-color: alpha(currentColor, 0.09);
+    border-color: alpha(currentColor, 0.08);
+    border-radius: 9px;
 }
 
 .track-dropdown-popover {
     min-width: 0;
+    padding: 0;
+}
+
+.track-dropdown-popover > contents {
+    padding: 4px;
+    border-radius: 12px;
+}
+
+.track-dropdown-list {
+    min-width: 0;
+    background: transparent;
 }
 
 .track-dropdown-list row {
     min-width: 0;
-    padding: 6px 10px;
+    min-height: 30px;
+    border-radius: 7px;
+    margin: 2px 4px;
+    padding: 0;
+    transition: background-color 150ms ease;
 }
 
-.track-dropdown-list label {
-    min-width: 0;
+.track-dropdown-list row:hover {
+    background-color: alpha(currentColor, 0.08);
+}
+
+.track-dropdown-list row:selected {
+    background-color: alpha(@accent_bg_color, 0.16);
+    color: @accent_color;
 }
 
 .stat-box {
     border-radius: 16px;
     background-color: alpha(currentColor, 0.05);
     box-shadow: none;
-    padding: 12px 14px;
-    transition: background-color 180ms ease;
+    padding: 14px 16px 10px 16px;
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease;
 }
 
 .stat-box:hover {
     background-color: alpha(currentColor, 0.08);
+    border-color: alpha(currentColor, 0.08);
 }
 
 .stat-label {
@@ -198,7 +229,7 @@
 }
 
 .stat-value {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 700;
     color: @card_fg_color;
     font-variant-numeric: tabular-nums;
@@ -206,7 +237,7 @@
 }
 
 .stat-viz {
-    min-height: 28px;
+    min-height: 34px;
     opacity: 0.95;
 }
 

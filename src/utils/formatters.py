@@ -10,6 +10,10 @@ SUPPORTED_AUDIO_EXTENSIONS = (
     ".m4a",
     ".aac",
     ".wma",
+    ".alac",
+    ".aiff",
+    ".ape",
+    ".webm",
 )
 
 
@@ -36,7 +40,8 @@ def format_sessions(count: int) -> str:
 def track_display_name(file_path: str) -> str:
     name = os.path.basename(file_path or "")
     stem, _ext = os.path.splitext(name)
-    return stem or name or "Unknown track"
+    clean = stem.replace("_", " ").replace("-", " ").strip()
+    return clean or name or "Unknown track"
 
 
 def is_supported_audio(path: str) -> bool:
@@ -53,23 +58,19 @@ def collect_audio_files(paths) -> list:
         if not path:
             continue
         if os.path.isfile(path):
-            candidates = [path]
+            if is_supported_audio(path):
+                resolved = os.path.abspath(path)
+                if resolved not in seen:
+                    seen.add(resolved)
+                    found.append(resolved)
         elif os.path.isdir(path):
-            candidates = [
-                os.path.join(path, name)
-                for name in sorted(os.listdir(path))
-                if os.path.isfile(os.path.join(path, name))
-            ]
-        else:
-            continue
-
-        for candidate in candidates:
-            if not is_supported_audio(candidate):
-                continue
-            resolved = os.path.abspath(candidate)
-            if resolved in seen:
-                continue
-            seen.add(resolved)
-            found.append(resolved)
+            for root, _, files in os.walk(path):
+                for name in sorted(files):
+                    full = os.path.join(root, name)
+                    if is_supported_audio(full):
+                        resolved = os.path.abspath(full)
+                        if resolved not in seen:
+                            seen.add(resolved)
+                            found.append(resolved)
 
     return found

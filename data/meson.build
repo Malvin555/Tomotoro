@@ -57,4 +57,6 @@ gnome.compile_resources(
   install_dir: get_option('datadir') / meson.project_name(),
 )
 
+install_subdir('sounds', install_dir: get_option('datadir') / meson.project_name())
+
 subdir('icons')

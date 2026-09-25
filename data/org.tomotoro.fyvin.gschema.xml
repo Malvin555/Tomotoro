@@ -41,5 +41,10 @@
 			<summary>Play music with Pomodoro</summary>
 			<description>Automatically play ambient music when a Pomodoro session starts.</description>
 		</key>
+		<key name="continue-music-between-sessions" type="b">
+			<default>false</default>
+			<summary>Keep music playing across sessions</summary>
+			<description>Seamlessly continue ambient music between focus and break transitions.</description>
+		</key>
 	</schema>
 </schemalist>

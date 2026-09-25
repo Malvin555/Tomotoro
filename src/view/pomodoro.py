@@ -32,7 +32,6 @@ class PomodoroView(Gtk.Box):
     track_picker_box = Gtk.Template.Child()
     music_file_button = Gtk.Template.Child()
     music_play_button = Gtk.Template.Child()
-    volume_scale = Gtk.Template.Child()
     sessions_today_value = Gtk.Template.Child()
     focus_time_value = Gtk.Template.Child()
     sessions_viz_box = Gtk.Template.Child()
@@ -94,7 +93,6 @@ class PomodoroView(Gtk.Box):
         self.track_dropdown.connect("track-selected", self._on_track_selected)
         self.music_file_button.connect("clicked", self._on_choose_audio_file)
         self.music_play_button.connect("clicked", self._on_music_play_clicked)
-        self.volume_scale.connect("value-changed", self._on_volume_changed)
 
     def _reload_tracks(self):
         tracks = self.audio.get_track_list()
@@ -142,33 +140,51 @@ class PomodoroView(Gtk.Box):
         toast.set_timeout(3)
         self.toast_overlay.add_toast(toast)
 
-        self.audio.stop()
-        self._was_running = False
+        continue_music = self.settings.is_continue_music_between_sessions()
+        will_auto_start = (
+            self.settings.is_auto_start_breaks()
+            if mode == MODE_FOCUS
+            else self.settings.is_auto_start_focus()
+        )
+
+        if not (continue_music and (will_auto_start or self.timer.running)):
+            self.audio.stop()
+            self._was_running = False
+            self.music_gate.refresh(False, False)
+        else:
+            self._was_running = True
+            self.music_gate.refresh(True, self.audio.is_playing)
+
         self._update_stats()
-        self.mode_switcher.set_locked(False)
-        self.music_gate.refresh(False, False)
+        self.mode_switcher.set_locked(self.timer.running)
 
     def _on_timer_skipped(self, mode):
         toast = Adw.Toast.new(f"{MODE_TITLES.get(mode, 'Session')} skipped")
         toast.set_timeout(2)
         self.toast_overlay.add_toast(toast)
 
-        self.audio.stop()
-        self._was_running = False
+        if not self.settings.is_continue_music_between_sessions():
+            self.audio.stop()
+            self._was_running = False
+            self.music_gate.refresh(False, False)
+        else:
+            self.music_gate.refresh(self.timer.running, self.audio.is_playing)
+
         self._update_stats()
         self.mode_switcher.set_locked(False)
-        self.music_gate.refresh(False, False)
 
     def _sync_music_with_timer(self, running: bool):
         if running and not self._was_running:
             if (
                 self.music_switch.get_active()
                 and self.settings.is_play_music_with_timer()
+                and not self.audio.is_playing
             ):
                 self.audio.play()
 
         elif not running and self._was_running:
-            self.audio.pause()
+            if not self.settings.is_continue_music_between_sessions():
+                self.audio.pause()
 
         self._was_running = running
 
@@ -204,9 +220,19 @@ class PomodoroView(Gtk.Box):
             dialog.set_title("Add Ambient Audio")
 
             audio_filter = Gtk.FileFilter()
-            audio_filter.set_name("Audio Files (*.mp3, *.ogg, *.flac, *.wav)")
+            audio_filter.set_name("Audio Files")
             audio_filter.add_mime_type("audio/*")
-            for pattern in ("*.mp3", "*.ogg", "*.flac", "*.wav", "*.opus", "*.m4a"):
+            for pattern in (
+                "*.mp3",
+                "*.ogg",
+                "*.flac",
+                "*.wav",
+                "*.opus",
+                "*.m4a",
+                "*.aac",
+                "*.wma",
+                "*.alac",
+            ):
                 audio_filter.add_pattern(pattern)
             dialog.set_default_filter(audio_filter)
 
@@ -215,7 +241,7 @@ class PomodoroView(Gtk.Box):
             dialog.set_filters(filters)
 
             window = self.get_root()
-            dialog.open(
+            dialog.open_multiple(
                 window if isinstance(window, Gtk.Window) else None,
                 None,
                 self._on_file_dialog_finish,
@@ -225,20 +251,32 @@ class PomodoroView(Gtk.Box):
 
     def _on_file_dialog_finish(self, dialog, result):
         try:
-            file = dialog.open_finish(result)
-            if not file:
+            files = dialog.open_multiple_finish(result)
+            if not files or files.get_n_items() == 0:
                 return
-            self.audio.set_custom_file(file.get_path())
+            paths = []
+            for i in range(files.get_n_items()):
+                f = files.get_item(i)
+                if f and f.get_path():
+                    paths.append(f.get_path())
+            if not paths:
+                return
+            added = self.audio.add_paths(paths)
+            if paths:
+                self.audio.set_custom_file(paths[0])
             self._reload_tracks()
+
+            if added > 0:
+                toast = Adw.Toast.new(f"Added {added} track{'s' if added > 1 else ''}")
+                toast.set_timeout(2)
+                self.toast_overlay.add_toast(toast)
+
             if self.timer.running and self.music_switch.get_active():
                 self.audio.play()
         except Exception:
             pass
 
-    def _on_volume_changed(self, scale):
-        self.audio.set_volume(scale.get_value() / 100.0)
-
-    def _on_audio_state_changed(self, is_playing, current_track_name, volume):
+    def _on_audio_state_changed(self, is_playing, current_track_name, volume=1.0):
         if is_playing and not self.timer.running:
             self.audio.stop()
             return

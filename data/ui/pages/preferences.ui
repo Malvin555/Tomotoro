@@ -94,6 +94,13 @@
             </child>
 
             <child>
+              <object class="AdwSwitchRow" id="continue_music_row">
+                <property name="title" translatable="yes">Keep Playing Across Sessions</property>
+                <property name="subtitle" translatable="yes">Continue ambient music seamlessly between focus and break transitions</property>
+              </object>
+            </child>
+
+            <child>
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Add Music Files</property>
                 <property name="subtitle" translatable="yes">Select one or more audio files</property>
@@ -133,6 +140,17 @@
           <object class="AdwPreferencesGroup" id="custom_tracks_group">
             <property name="title" translatable="yes">Selected Tracks</property>
             <property name="description" translatable="yes">Tracks available in the Pomodoro music dropdown</property>
+            <property name="header-suffix">
+              <object class="GtkButton" id="clear_tracks_button">
+                <property name="icon-name">edit-clear-all-symbolic</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Clear all custom tracks</property>
+                <property name="visible">False</property>
+                <style>
+                  <class name="flat" />
+                </style>
+              </object>
+            </property>
           </object>
         </child>
       </object>

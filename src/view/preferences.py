@@ -15,8 +15,10 @@ class TomotoroPreferences(Adw.PreferencesDialog):
     auto_start_focus_row = Gtk.Template.Child()
     sound_row = Gtk.Template.Child()
     play_with_timer_row = Gtk.Template.Child()
+    continue_music_row = Gtk.Template.Child()
     add_files_button = Gtk.Template.Child()
     add_folder_button = Gtk.Template.Child()
+    clear_tracks_button = Gtk.Template.Child()
     custom_tracks_group = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
@@ -61,10 +63,16 @@ class TomotoroPreferences(Adw.PreferencesDialog):
             self.play_with_timer_row,
             "active",
         )
+        self.settings_service.bind(
+            "continue-music-between-sessions",
+            self.continue_music_row,
+            "active",
+        )
 
     def _setup_music_page(self):
         self.add_files_button.connect("clicked", self._on_add_files)
         self.add_folder_button.connect("clicked", self._on_add_folder)
+        self.clear_tracks_button.connect("clicked", self._on_clear_tracks)
         self.audio_service.on_tracks_change_callbacks.append(self._on_tracks_changed)
 
         self.connect("destroy", self._on_destroy)
@@ -89,6 +97,11 @@ class TomotoroPreferences(Adw.PreferencesDialog):
             "*.wav",
             "*.m4a",
             "*.aac",
+            "*.wma",
+            "*.alac",
+            "*.aiff",
+            "*.ape",
+            "*.webm",
         ):
             audio_filter.add_pattern(pattern)
         audio_filter.add_mime_type("audio/*")
@@ -141,6 +154,12 @@ class TomotoroPreferences(Adw.PreferencesDialog):
         added = self.audio_service.add_paths([path])
         self._show_add_toast(added)
 
+    def _on_clear_tracks(self, _button):
+        self.audio_service.clear_custom_tracks()
+        toast = Adw.Toast.new("Cleared all custom tracks")
+        toast.set_timeout(2)
+        self.add_toast(toast)
+
     def _show_add_toast(self, added: int):
         if added <= 0:
             message = "No supported audio files found"
@@ -164,7 +183,10 @@ class TomotoroPreferences(Adw.PreferencesDialog):
         self._clear_track_rows()
         tracks = self.audio_service.get_custom_tracks()
 
-        if not tracks:
+        has_tracks = bool(tracks)
+        self.clear_tracks_button.set_visible(has_tracks)
+
+        if not has_tracks:
             row = Adw.ActionRow()
             row.set_title("No custom tracks yet")
             row.set_subtitle("Add files or a folder to use your own focus music")

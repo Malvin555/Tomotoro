@@ -1,6 +1,7 @@
 from gi.repository import Gtk
 
 from ..constant import MODE_BREAK, MODE_FOCUS
+from ..services.settings import SettingsService
 
 MODE_LOCK_TOOLTIP = "Pause the timer before changing mode"
 
@@ -66,28 +67,29 @@ class MusicSessionGate:
         self.title_marquee = title_marquee
         self.track_dropdown = track_dropdown
         self.audio = audio_service
+        self.settings = SettingsService.get_default()
 
     def refresh(self, running: bool, is_playing: bool):
         enabled = self.switch.get_active()
 
-        # The music switch itself is always available
         self.switch.set_sensitive(True)
-
-        # All music controls depend on the music switch
         self.controls.set_sensitive(enabled)
         self.track_dropdown.set_sensitive(enabled)
 
-        # Turning music off pauses playback
         if not enabled and self.audio.is_playing:
             self.audio.pause()
             is_playing = False
 
-        # Timer stopping also pauses playback
         if not running and self.audio.is_playing:
-            self.audio.pause()
-            is_playing = False
+            if not self.settings.is_continue_music_between_sessions():
+                self.audio.pause()
+                is_playing = False
 
-        playing = running and enabled and is_playing
+        playing = (
+            (running or self.settings.is_continue_music_between_sessions())
+            and enabled
+            and is_playing
+        )
 
         self.title_marquee.set_active(playing)
         self.track_dropdown.set_marquee_active(playing)

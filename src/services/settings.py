@@ -24,6 +24,7 @@ class SettingsService:
             "custom-tracks": [],
             "selected-track": "preset:0",
             "play-music-with-timer": False,
+            "continue-music-between-sessions": False,
         }
         self._init_settings()
 
@@ -121,6 +122,9 @@ class SettingsService:
 
     def is_play_music_with_timer(self) -> bool:
         return self.get_boolean("play-music-with-timer", False)
+
+    def is_continue_music_between_sessions(self) -> bool:
+        return self.get_boolean("continue-music-between-sessions", False)
 
     def bind(
         self,
