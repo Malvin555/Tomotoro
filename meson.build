@@ -1,6 +1,6 @@
 project(
     'tomotoro',
-    version: '0.5.0 Beta',
+    version: '1.0.0',
     meson_version: '>= 1.0.0',
     default_options: [
         'warning_level=2',
