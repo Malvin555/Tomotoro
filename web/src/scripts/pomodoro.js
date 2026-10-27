@@ -24,17 +24,17 @@ export function initPomodoro() {
             flex: ${segment.min} 1 0%;
             background: ${segment.color};
             color: ${segment.label === "Short break" ? "var(--tint)" : "var(--ink)"};
-            height: ${segment.min === 25 ? 100 : segment.min === 15 ? 65 : 45}%;
-            padding: 8px clamp(2px, 1vw, 12px);
+            height: ${segment.min === 25 ? 100 : 45}%;
+            padding: 16px clamp(4px, 1.5vw, 20px);
             box-sizing: border-box;
             border-radius: 12px;
           "
         >
-          <span class="hidden whitespace-nowrap font-display text-sm font-extrabold sm:block">
+          <span class="font-display text-sm font-extrabold sm:text-lg">
             ${segment.min}
           </span>
 
-          <span class="hidden whitespace-nowrap text-xs opacity-80 lg:block">
+          <span class="hidden text-xs opacity-80 sm:block">
             ${segment.label}
           </span>
         </div>
