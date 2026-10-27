@@ -1,0 +1,48 @@
+
+---
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  variant?: 'light' | 'accent';
+}
+
+const {
+  number,
+  title,
+  description,
+  variant = 'light',
+} = Astro.props;
+
+const styles = {
+  light: {
+    card: 'bg-tint',
+    number: 'text-accent',
+    description: 'text-muted',
+  },
+  accent: {
+    card: 'bg-accent text-cream',
+    number: '',
+    description: 'opacity-90',
+  },
+};
+---
+
+<article class:list={[
+  'flex flex-col justify-between rounded-[2rem] p-8 md:col-span-2',
+  styles[variant].card,
+]}>
+  <span class:list={['font-bold', styles[variant].number]}>
+    {number}
+  </span>
+
+  <div>
+    <h3 class="font-display text-2xl font-extrabold tracking-tight">
+      {title}
+    </h3>
+
+    <p class:list={['mt-2', styles[variant].description]}>
+      {description}
+    </p>
+  </div>
+</article>

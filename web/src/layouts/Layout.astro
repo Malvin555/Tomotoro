@@ -1,0 +1,107 @@
+---
+import "@/assets/css/style.css";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      <meta name="theme-color" content="#171717" />
+      <meta name="color-scheme" content="light" />
+
+      <title>Tomotoro – A Simple Pomodoro Timer for GNOME</title>
+
+      <meta
+        name="description"
+        content="Meet Tomotoro, a simple and beautiful Pomodoro timer for GNOME. Stay focused with distraction-free work sessions and regular breaks."
+      />
+
+      <meta name="author" content="Malvin555" />
+      <meta name="application-name" content="Tomotoro" />
+      <meta name="generator" content="Astro" />
+
+      <meta
+        name="keywords"
+        content="Tomotoro, Pomodoro timer, GNOME, GTK4, Linux, productivity, focus timer, open source"
+      />
+
+      <meta name="robots" content="index, follow" />
+
+      <link rel="canonical" href="https://tomotoro.wasmer.app/" />
+
+      <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+      <link rel="manifest" href="/site.webmanifest">
+
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Tomotoro" />
+      <meta
+        property="og:title"
+        content="Tomotoro – A Simple Pomodoro Timer for GNOME"
+      />
+      <meta
+        property="og:description"
+        content="Stay focused, work in short sessions, and take regular breaks. Meet Tomotoro, a simple Pomodoro timer built for GNOME."
+      />
+      <meta property="og:url" content="https://tomotoro.wasmer.app/" />
+      <meta
+        property="og:image"
+        content="https://tomotoro.wasmer.app/images/social-preview.png"
+      />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Tomotoro – Pomodoro timer for GNOME" />
+      <meta property="og:locale" content="en_US" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta
+        name="twitter:title"
+        content="Tomotoro – A Simple Pomodoro Timer for GNOME"
+      />
+      <meta
+        name="twitter:description"
+        content="A simple and beautiful Pomodoro timer for GNOME. Focus better with Tomotoro."
+      />
+      <meta
+        name="twitter:image"
+        content="https://tomotoro.wasmer.app/images/social-preview.png"
+      />
+      <meta
+        name="twitter:image:alt"
+        content="Tomotoro Pomodoro timer interface"
+      />
+    </head>
+<body class="font-sans">
+
+<header class="sticky z-50 bg-bg" style="top: env(safe-area-inset-top)">
+  <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
+      <a href="#top" class="flex items-center gap-2.5 font-display text-xl font-extrabold tracking-tight">
+        <img src="/favicon.png" alt="" class="h-8 w-8" />
+        Tomotoro
+      </a>
+    <div class="flex items-center gap-2">
+      <button id="themeToggle" type="button" aria-label="Toggle color scheme" class="grid h-10 w-10 place-items-center rounded-full hover:bg-tint">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<slot/>
+
+<footer >
+  <div class="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-5 py-10 sm:flex-row sm:items-end">
+    <p class="font-display text-5xl font-black tracking-tighter sm:text-7xl">Tomotoro</p>
+    <p class="text-sm text-muted">© 2026 Tomotoro. Free software under the GPL.<br>Made for the GNOME desktop.</p>
+  </div>
+</footer>
+
+
+<script>
+  import '@/scripts/main.js';
+</script>
+</body>
+</html>

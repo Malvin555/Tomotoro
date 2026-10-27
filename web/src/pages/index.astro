@@ -1,0 +1,266 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import WindowHeader from '@/components/WindowHeader.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+
+---
+
+<Layout>
+<main id="top">
+  <section class="px-3 sm:px-5">
+    <div class="mx-auto grid max-w-7xl overflow-hidden rounded-[2rem] bg-accent text-cream lg:min-h-[44rem] lg:grid-cols-12">
+      <div class="flex flex-col justify-center px-7 py-14 sm:px-12 lg:col-span-6 lg:py-20">
+
+        <h1 class="font-display text-6xl font-black leading-[.92] tracking-tighter sm:text-8xl">Balance focus and rest.</h1>
+        <p class="mt-7 max-w-lg text-lg leading-relaxed opacity-90 sm:text-xl">
+          Tomotoro is a simple Pomodoro timer for GNOME. Work in short sessions, take regular breaks, and keep a clean, distraction-free window that fits naturally into your desktop.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href="#get" class="rounded-full bg-cream px-8 py-4 font-bold text-night hover:opacity-90">Get Tomotoro</a>
+          <a href="https://gitlab.com/Malvin555/maldoro" target="_blank" rel="noopener" class="rounded-full border-2 border-cream px-8 py-4 font-bold hover:bg-cream hover:text-night">Source code</a>
+        </div>
+      </div>
+
+      <div class="relative flex items-end justify-center px-4 pt-8 lg:col-span-6 lg:px-0 lg:pt-16">
+
+        <div class="absolute bottom-0 left-0 hidden w-[30rem] translate-y-28 -rotate-7 overflow-hidden rounded-t-[1.1rem] lg:block">
+          <img
+            src="/images/preview-02.png"
+            alt="Tomotoro preferences window"
+            class="block w-full"
+          />
+        </div>
+
+        <div class="relative w-full max-w-[30rem] overflow-hidden rounded-t-[1.1rem] lg:ml-24 lg:translate-y-16">
+          <img
+            src="/images/preview-01.png"
+            alt="Tomotoro timer interface showing the focus timer"
+            class="block w-full"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cycle" class="mx-auto max-w-7xl px-5 pb-8 pt-32 sm:pt-40">
+    <div class="grid gap-8 lg:grid-cols-12">
+      <h2 class="font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-6xl lg:col-span-5">One round. Four sessions.</h2>
+      <p class="text-lg leading-relaxed text-muted lg:col-span-6 lg:col-start-7">
+        The Pomodoro technique splits your work into focused sessions with a short break after each one, then a longer rest after the fourth. Tomotoro keeps that rhythm so you only have to think about the task in front of you.
+      </p>
+    </div>
+    <div id="cycleBar" class="mt-14 flex h-28 items-end gap-1.5 sm:h-36"></div>
+    <div class="mt-4 flex flex-wrap gap-6 text-sm font-semibold text-muted">
+      <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-accent"></i>Focus</span>
+      <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink"></i>Short break</span>
+      <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm" style="background:#3f8f3a"></i>Long break</span>
+      <span class="ml-auto">Classic 25 / 5 / 15 minute cycle</span>
+    </div>
+  </section>
+
+  <section id="interface" class="mx-auto max-w-7xl px-5 py-24 sm:py-32">
+    <div class="mb-12 max-w-3xl">
+      <p class="font-bold text-accent">Explore the interface</p>
+      <h2 class="mt-2 font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-6xl">
+        Looks like it belongs. Because it does.
+      </h2>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-12">
+      <div id="shotTabs" role="tablist" class="flex flex-col gap-2 lg:col-span-4">
+        <button
+          role="tab"
+          type="button"
+          data-shot="timer"
+          aria-selected="true"
+          class="tab rounded-2xl p-5"
+        >
+          <span class="font-display text-xl font-bold">The timer</span>
+          <p class="mt-1 text-sm text-muted">
+            A single ring, one big clock, and the only controls you need.
+          </p>
+        </button>
+
+        <button
+          role="tab"
+          type="button"
+          data-shot="break"
+          aria-selected="false"
+          class="tab rounded-2xl p-5"
+        >
+          <span class="font-display text-xl font-bold">Break time</span>
+          <p class="mt-1 text-sm text-muted">
+            A calm reminder to step away from the screen and recharge.
+          </p>
+        </button>
+
+        <button
+          role="tab"
+          type="button"
+          data-shot="prefs"
+          aria-selected="false"
+          class="tab rounded-2xl p-5"
+        >
+          <span class="font-display text-xl font-bold">Preferences</span>
+          <p class="mt-1 text-sm text-muted">
+            Native Libadwaita rows for session lengths and notifications.
+          </p>
+        </button>
+
+        <button
+          role="tab"
+          type="button"
+          data-shot="narrow"
+          aria-selected="false"
+          class="tab rounded-2xl p-5"
+        >
+          <span class="font-display text-xl font-bold">Adaptive</span>
+          <p class="mt-1 text-sm text-muted">
+            Scales down to narrow windows and small screens without losing a thing.
+          </p>
+        </button>
+      </div>
+
+      <div class="relative h-[26rem] overflow-hidden rounded-[2rem] bg-night sm:h-[36rem] lg:col-span-8">
+          <div class="absolute bottom-0 left-1/2 w-full max-w-3xl -translate-x-1/2">
+            <img
+              data-panel="timer"
+              src="/images/timer.png"
+              alt="Tomotoro timer interface"
+              class="block w-full translate-y-[40px] md:translate-y-[180px]"
+            />
+
+            <img
+              data-panel="break"
+              src="/images/break.png"
+              alt="Tomotoro break screen"
+              class="hidden w-full translate-y-[40px] md:translate-y-[180px]"
+            />
+
+            <img
+              data-panel="prefs"
+              src="/images/prefs.png"
+              alt="Tomotoro preferences window"
+              class="hidden w-full translate-y-[40px] md:translate-y-[180px]"
+            />
+
+            <img
+              data-panel="narrow"
+              src="/images/adaptive.png"
+              alt="Tomotoro adaptive layout"
+              class="hidden w-full translate-y-[300px] md:translate-y-[500px]"
+            />
+          </div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-muted">
+      Interface previews. Explore Tomotoro's timer, break screen, preferences, and adaptive layout.
+    </p>
+  </section>
+
+  <section id="features" class="mx-auto max-w-7xl px-5 pb-24 sm:pb-32">
+    <h2 class="mb-12 max-w-3xl font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-6xl">Small app. Clear purpose.</h2>
+    <div class="grid auto-rows-[minmax(14rem,auto)] gap-4 md:grid-cols-6">
+      <article class="flex flex-col justify-between rounded-[2rem] bg-ink p-8 text-bg md:col-span-4 md:row-span-2">
+        <span class="font-bold text-accent">01 — Native</span>
+        <div>
+          <h3 class="font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-6xl">Made with GTK4 and Libadwaita.</h3>
+          <p class="mt-5 max-w-md text-lg opacity-75">It follows the GNOME Human Interface Guidelines, so every row, button and header bar behaves exactly as you expect.</p>
+        </div>
+      </article>
+      <FeatureCard
+        number="02 — Focus"
+        title="Distraction-free"
+        description="Only the time you have left. Nothing else asks for attention."
+      />
+      <FeatureCard
+        number="03 — Rhythm"
+        title="Regular breaks"
+        description="Short and long breaks keep you fresh through the whole day."
+        variant="accent"
+      />
+      <article class="grid overflow-hidden rounded-[2rem] md:col-span-3 sm:grid-cols-2">
+        <div class="flex flex-col justify-end bg-[#fafafb] p-7 text-[#241f31]"><span class="font-display text-xl font-extrabold">Light</span></div>
+        <div class="flex flex-col justify-end bg-[#242428] p-7 text-[#f6f5f4]"><span class="font-display text-xl font-extrabold">Dark</span></div>
+      </article>
+      <article class="flex flex-col justify-between rounded-[2rem] border-2 border-ink p-8 md:col-span-3">
+        <span class="font-bold text-accent">04 — Free</span>
+        <div><h3 class="font-display text-2xl font-extrabold tracking-tight">Free software, GPL-3.0-or-later</h3><p class="mt-2 text-muted">Read it, change it, share it. No accounts, no tracking.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="get" class="px-3 sm:px-5">
+    <div class="mx-auto grid max-w-7xl gap-10 rounded-[2rem] bg-night p-8 text-cream sm:p-14 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-5xl font-black leading-none tracking-tighter sm:text-7xl">Get Tomotoro.</h2>
+        <p class="mt-6 max-w-md text-lg opacity-75">Download the latest release or build it yourself. Tomotoro runs on any desktop with GTK4 and Libadwaita.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="https://gitlab.com/Malvin555/maldoro/-/releases" target="_blank" rel="noopener" class="rounded-full bg-accent px-8 py-4 font-bold text-cream hover:opacity-90">Download releases</a>
+          <a href="https://gitlab.com/Malvin555/maldoro/-/tags" target="_blank" rel="noopener" class="rounded-full border-2 border-cream/40 px-8 py-4 font-bold hover:border-cream">All tags</a>
+        </div>
+      </div>
+      <div class="self-end rounded-2xl bg-black/40 p-6 font-mono text-sm leading-7">
+        <p class="opacity-50">Clone the repository</p>
+        <p class="break-all">git clone https://gitlab.com/Malvin555/maldoro.git</p>
+        <button id="copyBtn" type="button" data-copy="git clone https://gitlab.com/Malvin555/maldoro.git" class="mt-4 rounded-full bg-cream px-5 py-2 font-sans text-xs font-bold text-night hover:opacity-90">Copy command</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="community" class="mx-auto max-w-7xl px-5 py-24 sm:py-32">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <h2 class="font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-5xl">Get involved</h2>
+        <p class="mt-4 text-muted">Tomotoro is built in the open. Every report, patch and idea helps.</p>
+        <ul class="mt-6 space-y-2 font-semibold">
+          <li><a class="flex items-center justify-between rounded-2xl bg-tint px-5 py-4 hover:bg-line" href="https://gitlab.com/Malvin555/maldoro/-/issues" target="_blank" rel="noopener">Report an issue <span>→</span></a></li>
+          <li><a class="flex items-center justify-between rounded-2xl bg-tint px-5 py-4 hover:bg-line" href="https://gitlab.com/Malvin555/maldoro/-/merge_requests" target="_blank" rel="noopener">Contribute code <span>→</span></a></li>
+          <li><a class="flex items-center justify-between rounded-2xl bg-tint px-5 py-4 hover:bg-line" href="https://gitlab.com/Malvin555/maldoro" target="_blank" rel="noopener">Browse the source <span>→</span></a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-4">
+        <h2 class="font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-5xl">Get to know us</h2>
+        <a
+          href="https://gitlab.com/Malvin555"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-6 flex items-center gap-4 rounded-2xl bg-tint p-5 transition-colors hover:bg-tint/70"
+        >
+          <img
+            src="https://gitlab.com/uploads/-/system/user/avatar/37820762/avatar.png?v=1793094675&width=800"
+            alt="GitLab profile avatar"
+            class="h-14 w-14 rounded-full object-cover"
+          />
+
+          <div>
+            <p class="font-display text-lg font-bold">Malvin555</p>
+            <p class="text-sm text-muted">Maintainer</p>
+          </div>
+        </a>
+        <h3 class="mb-3 mt-8 text-sm font-bold uppercase tracking-wide text-muted">Keywords</h3>
+        <ul class="flex flex-wrap gap-2 text-sm font-semibold">
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">Linux</li>
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">Pomodoro</li>
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">Productivity</li>
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">Timer</li>
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">GTK4</li>
+          <li class="rounded-full border-2 border-ink px-4 py-1.5">Libadwaita</li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-4">
+        <h2 class="font-display text-4xl font-extrabold leading-none tracking-tighter sm:text-5xl">More information</h2>
+        <dl class="mt-6 divide-y divide-line rounded-2xl border-2 border-ink">
+          <div class="flex justify-between gap-4 px-5 py-4"><dt class="text-muted">Toolkit</dt><dd class="font-semibold">GTK4 · Libadwaita</dd></div>
+          <div class="flex justify-between gap-4 px-5 py-4"><dt class="text-muted">License</dt><dd class="font-semibold">GPL-3.0-or-later</dd></div>
+          <div class="flex justify-between gap-4 px-5 py-4"><dt class="text-muted">Category</dt><dd class="font-semibold">Productivity</dd></div>
+          <div class="flex justify-between gap-4 px-5 py-4"><dt class="text-muted">Releases</dt><dd><a class="font-semibold underline decoration-accent decoration-2 underline-offset-4" href="https://gitlab.com/Malvin555/maldoro/-/releases" target="_blank" rel="noopener">View all</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+</Layout>
