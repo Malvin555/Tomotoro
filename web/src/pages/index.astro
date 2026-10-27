@@ -49,12 +49,14 @@ import FeatureCard from '@/components/FeatureCard.astro';
         The Pomodoro technique splits your work into focused sessions with a short break after each one, then a longer rest after the fourth. Tomotoro keeps that rhythm so you only have to think about the task in front of you.
       </p>
     </div>
-    <div id="cycleBar" class="mt-14 flex h-28 items-end gap-1.5 sm:h-36"></div>
+    <div
+      id="cycleBar"
+      class="mt-14 flex h-28 min-w-0 items-end gap-1 sm:h-36"
+    ></div>
     <div class="mt-4 flex flex-wrap gap-6 text-sm font-semibold text-muted">
       <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-accent"></i>Focus</span>
       <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink"></i>Short break</span>
-      <span class="flex items-center gap-2"><i class="h-3 w-3 rounded-sm" style="background:#3f8f3a"></i>Long break</span>
-      <span class="ml-auto">Classic 25 / 5 / 15 minute cycle</span>
+      <span class="ml-auto">Classic 25 / 5 minute cycle</span>
     </div>
   </section>
 
